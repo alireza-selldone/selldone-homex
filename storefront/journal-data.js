@@ -1,5 +1,5 @@
-/* Published Homex journal fallback. Selldone XAPI remains the primary source;
-   these matching records keep the journal useful during cache or network incidents. */
+/* Published Homex journal snapshot. These records match the six live Selldone
+   articles and avoid rate-limited public reads on every page visit. */
 export const HOMEX_JOURNAL = [
   {
     id: 744767, blogId: 31880, category: { id: 8627, name: "Decor Styling", count: 1 }, title: "Mixing Decor Without Visual Clutter", slug: "mixing-decor-without-visual-clutter", description: "Build a calm decorative composition with repetition, scale, and breathing room.", image: "https://cdn.selldone.com/app/shops/15574/blog-categories/photojpg970cd2047917693fd3c29b9505afda34128.jpg", date: "2026-08-19T15:29:17Z",

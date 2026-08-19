@@ -164,6 +164,7 @@ function fallbackJournal() {
 /* Categories alone — one request. The article page needs a name for one id and
    should not pull the whole listing to get it. */
 export async function loadBlogCategories() {
+  if (HOMEX_JOURNAL.length) return HOMEX_JOURNAL.map((p) => p.category);
   const extra = await asJson(URL_BLOGS("?extra=true")).catch(() => ({ categories: [] }));
   return (extra.categories || []).map((c) => ({
     id: c.id, name: c.category, count: Number(c.articles) || 0,
@@ -171,6 +172,7 @@ export async function loadBlogCategories() {
 }
 
 export async function loadBlog() {
+  if (HOMEX_JOURNAL.length) return fallbackJournal();
   let listing, extra;
   try {
     [listing, extra] = await Promise.all([
@@ -213,6 +215,7 @@ export async function loadBlog() {
 
 export async function loadArticle({ blogId, slug }) {
   const local = HOMEX_JOURNAL.find((p) => (blogId && p.blogId === Number(blogId)) || (slug && p.slug === slug));
+  if (local) return { ...local, categoryId: local.category.id, author: "Homex" };
   let id = blogId;
   if (!id && slug) {
     const listing = await asJson(URL_BLOGS("?limit=100")).catch(() => null);

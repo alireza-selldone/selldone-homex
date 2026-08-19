@@ -126,8 +126,8 @@ async function initPDP(cat) {
       <div class="pline"></div>
 
       ${showSwatches ? `
-      <p class="eyebrow mb0" style="margin-bottom:14px">Case &amp; strap</p>
-      <div class="swatches" role="radiogroup" aria-label="Case and strap finish">
+      <p class="eyebrow mb0" style="margin-bottom:14px">Available finishes</p>
+      <div class="swatches" role="radiogroup" aria-label="Available finishes">
         ${variants.map((v, i) => `
           <button class="sw${v.image ? " sw--img" : ""}${i ? "" : " is-on"}" type="button" role="radio"
                   aria-checked="${i ? "false" : "true"}"
@@ -141,11 +141,11 @@ async function initPDP(cat) {
       <p class="swname mb0">Finish <span class="swhex" data-sw-hex>${esc(variants[0].color)}</span>${variants[0].sku ? ` <span class="swsku" data-sw-sku>${esc(variants[0].sku)}</span>` : `<span class="swsku" data-sw-sku hidden></span>`}</p>
       <p class="swpos" data-sw-pos>Finish 1 of ${variants.length}</p>
       ` : `
-      <p class="eyebrow mb0" style="margin-bottom:8px">Case &amp; strap</p>
+      <p class="eyebrow mb0" style="margin-bottom:8px">Finish</p>
       <p class="cap" style="margin-bottom:4px">A single option is recorded for this product.</p>
       `}
 
-      <p class="stock" data-stock><i class="dot"></i> ${(showSwatches ? stockOf(variants[0]) : p.qty) > 0 ? `${showSwatches ? stockOf(variants[0]) : p.qty} in stock &middot; ships within 3 working days` : "Currently unavailable"}</p>
+      <p class="stock" data-stock><i class="dot"></i> ${(showSwatches ? stockOf(variants[0]) : p.qty) > 0 ? `${showSwatches ? stockOf(variants[0]) : p.qty} in stock` : "Currently unavailable"}</p>
 
       <div class="purchase-actions">
         <button class="btn btn--primary" type="button" data-add="${p.id}">Add to bag</button>
@@ -269,7 +269,7 @@ async function initPDP(cat) {
       if (priceEl) priceEl.innerHTML = `${money(priceOf(v))}${p.was ? `<s>${money(p.was)}</s>` : ""}`;
       if (stockEl) {
         const q = stockOf(v);
-        stockEl.innerHTML = `<i class="dot"></i> ${q > 0 ? `${q} in stock &middot; ships within 3 working days` : "Currently unavailable"}`;
+        stockEl.innerHTML = `<i class="dot"></i> ${q > 0 ? `${q} in stock` : "Currently unavailable"}`;
       }
       showGallery(variantGalleryIndexes[i]);
     }));

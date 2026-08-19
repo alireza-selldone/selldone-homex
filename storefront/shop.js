@@ -1,4 +1,4 @@
-/* Digini — shop listing.
+/* Homex — shop listing.
    Ported from design-reference/shop.html + initShop(), extended with the
    brand filter. All data live from XAPI. */
 
@@ -117,7 +117,7 @@ function initShop(cat) {
       : `${cat.products.length} products across ${cat.cats.length} categories.`;
     count.textContent = `${list.length} ${list.length === 1 ? "product" : "products"}`;
     if (shown > list.length) shown = Math.max(PAGE, Math.ceil(list.length / PAGE) * PAGE);
-    document.title = `${one ? one.name : "All products"} — Digini`;
+    document.title = `${one ? one.name : "All products"} — Homex`;
 
     if (list.length) {
       const page = list.slice(0, shown);

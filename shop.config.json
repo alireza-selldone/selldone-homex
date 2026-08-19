@@ -1,143 +1,144 @@
 {
   "$comment": "Every shop-specific value in one file. Written by `npm run setup`; nothing here should be hand-edited on a real shop. Ships with the demonstration shop's values and isTemplate:true, so a fresh clone runs and looks finished while saying out loud that the products are not yours.",
   "shop": {
-    "id": 15549,
-    "handle": "digini-hZGabLru",
-    "name": "Digini",
-    "domain": "digini-hZGabLru.myselldone.com"
+    "id": 15574,
+    "handle": "homex",
+    "name": "Homex",
+    "domain": "homex.myselldone.com"
   },
   "isTemplate": false,
   "oauth": {
-    "clientId": "01a01211-8378-73fc-bb66-e9089330e752",
-    "appName": "Digini Storefront"
+    "clientId": "",
+    "appName": "Homex Storefront"
   },
   "brand": {
     "foundedYear": null,
     "cities": null,
-    "tagline": "Smart technology, clearly chosen.",
-    "announcement": "Curated electronics · Secure checkout · Helpful buying guides"
+    "tagline": "Furniture that makes room for living.",
+    "announcement": "Complimentary delivery on selected pieces · Secure checkout · Thoughtful design guides",
+    "announcementShort": "Selected delivery included · Secure checkout"
   },
   "categories": [
     {
-      "id": 108596,
-      "slug": "tv",
-      "blurb": "Smart TVs and displays for streaming, entertainment, and everyday viewing."
+      "id": 108733,
+      "slug": "home-decor",
+      "blurb": "Sculptural accents, tactile objects, and finishing pieces for a considered home."
     },
     {
-      "id": 108598,
-      "slug": "digital-camera",
-      "blurb": "Digital cameras for travel, creativity, and memorable everyday shots."
+      "id": 108744,
+      "slug": "coffee-tables",
+      "blurb": "Low tables in warm woods, stone, and modern silhouettes for relaxed living rooms."
     },
     {
-      "id": 108599,
-      "slug": "power-bank",
-      "blurb": "Compact backup power for phones, tablets, and devices on the move."
+      "id": 108743,
+      "slug": "rugs",
+      "blurb": "Soft foundations in layered neutrals, woven textures, and expressive patterns."
     },
     {
-      "id": 108600,
-      "slug": "ear-buds",
-      "blurb": "Wireless earbuds for calls, music, commuting, and workouts."
+      "id": 108742,
+      "slug": "lighting",
+      "blurb": "Pendant, floor, and table lighting designed to shape the mood of a room."
     },
     {
-      "id": 108601,
-      "slug": "flash-drive",
-      "blurb": "Portable flash storage for fast transfers and simple file sharing."
+      "id": 108725,
+      "slug": "chairs",
+      "blurb": "Dining, lounge, and accent seating with comfort-led proportions."
     },
     {
-      "id": 108602,
-      "slug": "hard-drive",
-      "blurb": "Hard drives for dependable backups, archives, and expanded storage."
+      "id": 108726,
+      "slug": "dining-table",
+      "blurb": "Dining tables made for everyday meals, long conversations, and generous gatherings."
     },
     {
-      "id": 108608,
-      "slug": "rv",
-      "blurb": "Portable power stations for travel, road trips, and emergency backup."
+      "id": 108734,
+      "slug": "gaming-chairs",
+      "blurb": "Supportive statement seating for focused play, work, and streaming setups."
     },
     {
-      "id": 108594,
-      "slug": "laptop",
-      "blurb": "Laptops for study, work, entertainment, and creative projects."
+      "id": 108727,
+      "slug": "cabinets",
+      "blurb": "Storage cabinets and display pieces that keep the room calm and organized."
     },
     {
-      "id": 108604,
-      "slug": "printers",
-      "blurb": "Printers for productive home offices, schoolwork, and small teams."
+      "id": 108732,
+      "slug": "vanity-desks",
+      "blurb": "Elegant dressing tables that pair useful storage with a lighter visual footprint."
     },
     {
-      "id": 108605,
-      "slug": "keyboard",
-      "blurb": "Keyboards designed for comfortable work, gaming, and daily use."
+      "id": 108731,
+      "slug": "office-tables",
+      "blurb": "Desks and work tables that bring structure and warmth to a home office."
     },
     {
-      "id": 108606,
-      "slug": "mice",
-      "blurb": "Precise mice for work, gaming, travel, and ergonomic comfort."
+      "id": 108728,
+      "slug": "beds",
+      "blurb": "Upholstered and wood-frame beds built around restful, quiet bedrooms."
     },
     {
-      "id": 108607,
-      "slug": "action-cameras",
-      "blurb": "Rugged action cameras for immersive footage and outdoor adventures."
+      "id": 108730,
+      "slug": "office-chairs",
+      "blurb": "Ergonomic office seating in refined materials for a better working day."
     },
     {
-      "id": 108603,
-      "slug": "monitors",
-      "blurb": "Monitors for sharper workspaces, creative tasks, and smooth gaming."
+      "id": 108729,
+      "slug": "drawers",
+      "blurb": "Chests and drawer units that add practical storage without visual clutter."
     },
     {
-      "id": 108595,
-      "slug": "microphones",
-      "blurb": "Microphones for clear calls, streaming, podcasts, and recording."
+      "id": 108723,
+      "slug": "sofa-bed",
+      "blurb": "Versatile sofa beds for guest-ready rooms and flexible everyday living."
     },
     {
-      "id": 108597,
-      "slug": "headphones",
-      "blurb": "Headphones for focused listening, travel, calls, and entertainment."
+      "id": 108724,
+      "slug": "home-and-living",
+      "blurb": "Comfortable essentials selected to make every shared space feel more personal."
     }
   ],
   "categoryHeroes": {
-    "tv": 710036,
-    "digital-camera": 710077,
-    "power-bank": 709993,
-    "ear-buds": 709994,
-    "flash-drive": 709995,
-    "hard-drive": 709996,
-    "rv": 710094,
-    "laptop": 710057,
-    "printers": 710049,
-    "keyboard": 710064,
-    "mice": 710070,
-    "action-cameras": 710086,
-    "monitors": 710047,
-    "microphones": 709981,
-    "headphones": 709988
+    "home-decor": 710504,
+    "coffee-tables": 710552,
+    "rugs": 710543,
+    "lighting": 710534,
+    "chairs": 710456,
+    "dining-table": 710462,
+    "gaming-chairs": 710516,
+    "cabinets": 710468,
+    "vanity-desks": 710498,
+    "office-tables": 710492,
+    "beds": 710474,
+    "office-chairs": 710486,
+    "drawers": 710480,
+    "sofa-bed": 710450,
+    "home-and-living": 710451
   },
   "hero": {
-    "mode": "slides",
-    "image": "",
+    "mode": "photo",
+    "image": "assets/homex/hero-dining.webp",
     "natural": {
-      "w": 1,
-      "h": 1
+      "w": 1680,
+      "h": 945
     },
-    "linkProductId": 710103,
+    "linkProductId": 710462,
     "hotspots": [],
     "slides": [
       {
-        "productId": 710103,
-        "kicker": "",
-        "title": "",
-        "lede": ""
+        "productId": 710521,
+        "kicker": "Focused comfort",
+        "title": "TurboChair SportPro Gaming Chair",
+        "lede": "A supportive gaming chair with a confident, modern silhouette."
       },
       {
-        "productId": 710041,
-        "kicker": "",
-        "title": "",
-        "lede": ""
+        "productId": 710469,
+        "kicker": "Order, beautifully",
+        "title": "Sodad Storage Cabinet Kitchen Pantry",
+        "lede": "Generous closed storage for a calmer kitchen or dining space."
       },
       {
-        "productId": 710058,
-        "kicker": "",
-        "title": "",
-        "lede": ""
+        "productId": 710463,
+        "kicker": "Room for more",
+        "title": "Tigoo Dining Room Extending Table",
+        "lede": "An extending dining table designed to welcome everyday meals and larger gatherings."
       }
     ]
   },

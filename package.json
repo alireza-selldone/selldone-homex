@@ -1,5 +1,5 @@
 {
-  "name": "codex-shop-digini",
+  "name": "selldone-homex",
   "scripts": {
     "build": "npm run build:static",
     "build:static": "node scripts/build-static.mjs",

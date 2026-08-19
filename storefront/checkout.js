@@ -1,4 +1,4 @@
-/* Digini — checkout.
+/* Homex — checkout.
    Five steps, validation on blur only, sticky summary from the live bag.
    This is a demonstration storefront: nothing is written to the shop and no
    order is placed. The physical basket path is documented inline so the real

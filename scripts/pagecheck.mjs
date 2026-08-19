@@ -9,7 +9,7 @@ import { chromium } from "playwright";
 
 const B = (process.argv[2] || "http://localhost:8788").replace(/\/+$/, "");
 const CONTENT = ["/about-us", "/terms", "/privacy", "/contact-us"];
-const ALL = ["/", "/shop.html", "/product.html?id=710103", "/checkout.html", "/blog", "/article.html?id=31649", ...CONTENT];
+const ALL = ["/", "/shop.html", "/product.html?id=710462", "/checkout.html", "/blog", "/article.html?id=31880", ...CONTENT];
 const EXPECTED_TOKENS = new Set(["SHOP_EMAIL", "SHOP_PHONE", "SHOP_ADDRESS", "COMPANY_REGISTRATION"]);
 
 let fails = 0;

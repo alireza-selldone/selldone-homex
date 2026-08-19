@@ -3,18 +3,18 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Product — Digini</title>
+    <title>Product — Homex</title>
     <meta
       name="description"
-      content="Discover product details, options, availability, and related technology at Digini."
+      content="Discover furniture details, materials, options, availability, and related pieces at Homex."
     />
-    <meta name="shop-name" content="Digini" />
-    <meta name="pajulina-app-name" content="Selldone Shop A1" />
-    <meta name="pajulina-client-id" content="01a01211-8378-73fc-bb66-e9089330e752" />
-    <meta name="pajulina-shop-id" content="15549" />
-    <meta name="pajulina-shop-name" content="Digini" />
-    <meta name="pajulina-shop-domain" content="digini-hZGabLru.myselldone.com" />
-    <meta name="pajulina-storefront-shop-handle" content="digini-hZGabLru" />
+    <meta name="shop-name" content="Homex" />
+    <meta name="pajulina-app-name" content="Homex Storefront" />
+    <meta name="pajulina-client-id" content="" />
+    <meta name="pajulina-shop-id" content="15574" />
+    <meta name="pajulina-shop-name" content="Homex" />
+    <meta name="pajulina-shop-domain" content="homex.myselldone.com" />
+    <meta name="pajulina-storefront-shop-handle" content="homex" />
     <meta name="pajulina-dashboard-path" content="/dashboard/" />
     <meta name="pajulina-callback-path" content="/callback/" />
     <meta name="pajulina-selldone-base" content="https://selldone.com" />
@@ -29,8 +29,9 @@
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link rel="preconnect" href="https://cdn.selldone.com" />
-    <link href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:opsz,wght@6..96,400;6..96,500&family=Archivo:wght@400;500;600&family=Azeret+Mono:wght@400;500&family=DM+Sans:wght@500;700&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Libre+Caslon+Display&display=swap" rel="stylesheet" />
     <link rel="stylesheet" href="styles.css" />
+    <link rel="stylesheet" href="homex.css" />
     <script type="module" src="app.js"></script>
     <script type="module" src="product.js"></script>
   </head>
@@ -38,7 +39,7 @@
 
     <a class="skip" href="#main">Skip to content</a>
 
-    <div class="page digini-page">
+    <div class="page homex-page">
       <!-- Platform credit. Sits above the shop's own announcement bar and is
            deliberately light: the announcement bar is dark, and two dark bars
            stacked read as one heavy block. Outside the sticky header, so the
@@ -49,21 +50,21 @@
 
       <header class="hdr">
         <div class="topbar">
-          <span class="topbar__long" data-announce-long>Curated electronics · Secure checkout · Helpful buying guides</span>
-          <span class="topbar__short" data-announce-short>Curated tech · Secure checkout</span>
+          <span class="topbar__long" data-announce-long>Complimentary delivery on selected pieces · Secure checkout · Thoughtful design guides</span>
+          <span class="topbar__short" data-announce-short>Selected delivery included · Secure checkout</span>
         </div>
         <div class="wrap hdr__in">
           <div class="hdr__nav">
             <nav class="nav" aria-label="Main">
-              <a href="shop.html">Products</a>
-              <a href="shop.html?cat=haute-horlogerie">Haute Horlogerie</a>
-              <a href="/blog">Buying Guides</a>
-              <a href="index.html#service">Client Care</a>
+              <a href="shop.html">Furniture</a>
+              <a href="shop.html?cat=sofa-bed">Living</a>
+              <a href="shop.html?cat=dining-table">Dining</a>
+              <a href="/blog">Journal</a>
             </nav>
             <div class="mega"><div class="mega__grid" id="megagrid"></div></div>
           </div>
           <button class="burger mobonly" data-open="nav" aria-label="Open menu"><span></span></button>
-          <a class="logo digini-logo" href="index.html">DIGI<span>NI</span></a>
+          <a class="logo homex-logo" href="index.html">homex<span>.</span></a>
           <div class="hdr__act">
             <button class="iconbtn" type="button" data-open="search" aria-label="Search">
               <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M16.5 16.5 21 21"/></svg>
@@ -110,7 +111,7 @@
         <div class="wrap" id="reviews"></div>
       </section>
 
-      <section class="section related-section">
+      <section class="section related-section" data-related-section hidden>
         <div class="wrap">
           <div class="related-heading"><h2 class="h2" id="reltitle">Related products</h2><div class="related-controls" data-related-controls><button type="button" data-related-prev aria-label="Previous related products">←</button><button type="button" data-related-next aria-label="Next related products">→</button></div></div>
           <div class="related-viewport" data-related-viewport><div class="related-track" id="related"></div></div>
@@ -121,7 +122,7 @@
         <div class="wrap">
           <div class="ft__cols">
             <div class="ft__col">
-              <p class="logo digini-logo" style="text-align:left;margin-bottom:18px">DIGI<span>NI</span></p>
+              <p class="logo homex-logo" style="text-align:left;margin-bottom:18px">homex<span>.</span></p>
               <p class="lede" style="font-size:14px" data-brand-tagline></p>
               <p class="demonote" style="margin-top:18px">Demonstration storefront. No order is ever placed.</p>
             </div>
@@ -133,7 +134,7 @@
               <h4>Help</h4>
               <ul>
                 <li><a href="/about-us">About us</a></li>
-                <li><a href="/blog">Buying guides</a></li>
+                <li><a href="/blog">Journal</a></li>
                 <li><a href="/terms#delivery">Shipping</a></li>
                 <li><a href="/terms#returns">Returns</a></li>
                 <li><a href="/terms#warranty">Warranty</a></li>
@@ -143,8 +144,8 @@
               </ul>
             </div>
             <div class="ft__col ft__col--sub">
-              <h4>New products</h4>
-              <p class="lede" style="font-size:14px;color:var(--whisper)">We write when something arrives. Roughly once a month.</p>
+              <h4>Stay inspired</h4>
+              <p class="lede" style="font-size:14px;color:var(--whisper)">New furniture, room ideas, and practical design notes.</p>
               <div class="sub">
                 <label class="sr" for="nl">Email address</label>
                 <input id="nl" type="email" placeholder="you@example.com" />
@@ -153,7 +154,7 @@
             </div>
           </div>
           <div class="ft__bar">
-            <span>© 2026 Digini</span>
+            <span>© 2026 Homex</span>
             <span>Visa · Mastercard · Amex · Bank transfer</span>
           </div>
         </div>
@@ -191,7 +192,7 @@
           <span class="price" style="font-family:var(--display);font-size:24px" data-cart-total>$0</span>
         </div>
         <a class="btn btn--full" href="checkout.html">Checkout</a>
-        <p class="cap center" style="margin-top:12px">Demonstration only — no order is placed.</p>
+        <p class="cap center" style="margin-top:12px">Taxes and delivery are calculated at checkout.</p>
       </div>
     </aside>
 

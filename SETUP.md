@@ -160,9 +160,9 @@ when signed out. **Once your shop is configured, delete it** — it is guidance
 for someone evaluating Selldone, not shop copy. One constant, `SIGNIN_NOTE` in
 `storefront/app.js`, plus `.setupnote` in `storefront/styles.css`.
 
-> On the Watchino demo shop the contact email is set to `info@watchino.com`
-> while `mail_service` is `null`. The callout is left in place deliberately:
-> the repo is a reference for people setting up their own shop.
+> Homex does not ship a fabricated contact email. Add the merchant-verified
+> address in **Store dashboard → Settings → Email** before enabling production
+> customer sign-in.
 
 ## 6. Cloudflare Workers Builds
 

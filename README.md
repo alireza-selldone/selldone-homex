@@ -1,114 +1,57 @@
-<div align="center">
+# Homex storefront
 
-# Digini
+An original, responsive furniture storefront for the Selldone shop **Homex** (shop `15574`). The interface uses live Selldone catalog, product, variant, blog, account, bag, and checkout data while keeping the presentation layer in this repository.
 
-**Technology for every day.**
+## Catalog status
 
-A responsive electronics storefront powered by Selldone and deployed on Cloudflare Workers.
+- 100 physical products across 15 furniture and home categories
+- 133 variants, including color-linked gallery images
+- 20 products tagged `trending`
+- 20 different products tagged `Best seller`
+- 6 published furniture journal articles with rectangular cover images
+- Category and primary product images use transparent, optimized assets; category cards reserve 69% of their height for media and render the subject at 70% of that media box
 
-[**View the live store →**](https://digini.selldone.shop/)
+## Design
 
-</div>
+The storefront is an original Homex design. Memoky supplied the main information-hierarchy reference: a utility strip, search-led header, room navigation, editorial hero, category-led discovery, product-heavy merchandising, and a practical product-detail page. Article and West Elm were also reviewed for current room taxonomy, filtering, service reassurance, and product-density patterns. No third-party logo, copy, photograph, or source code is included.
 
-![Digini home page](docs/screenshots/digini-home-desktop.png)
+The three editorial campaign images in `storefront/assets/homex/` were generated specifically for Homex and compressed as WebP. Every file is below 500 KB.
 
-## Visual tour
-
-### Product discovery
-
-The shop combines four-column desktop browsing, category filters, a dual-handle price range, manual price inputs, sorting, search, and a compact two-column mobile layout.
-
-![Digini shop page](docs/screenshots/digini-shop-desktop.png)
-
-### Product details
-
-Each product page includes a responsive gallery, image-linked color variants, stock and pricing details, paired purchase actions, related products, and customer reviews.
-
-![Digini product page](docs/screenshots/digini-product-desktop.png)
-
-### Customer reviews
-
-The home page includes a dedicated review experience with a rating summary, distribution chart, and clearly labeled sample testimonials.
-
-![Digini reviews section](docs/screenshots/digini-reviews-desktop.png)
-
-### Mobile experience
-
-Navigation, hero content, product grids, filters, typography, and spacing are optimized for smaller screens.
-
-<div align="center">
-  <img src="docs/screenshots/digini-home-mobile.png" width="360" alt="Digini mobile home page">
-</div>
-
-## Highlights
-
-- Live catalog data from the Selldone XAPI
-- Responsive four-column desktop and two-column mobile product grids
-- Category, availability, brand, and price filtering
-- Skeleton loading states that preserve page layout
-- Product galleries with image-linked color selections
-- Related-product carousels with arrow navigation
-- Five selectable color themes stored across visits
-- Four editorial buying guides with original artwork
-- Shared header and footer across the storefront
-- Public OAuth Authorization Code flow with PKCE
-- Static delivery through Cloudflare Workers Assets
-
-## Stack
-
-- Semantic HTML, modern CSS, and native JavaScript modules
-- Selldone XAPI for products, categories, and customer flows
-- Cloudflare Workers Static Assets for production hosting
-- Playwright-based visual and interaction checks
-- Wrangler for preview and deployment
-
-## Project structure
-
-```text
-storefront/     Storefront source, styles, and browser modules
-store-pages/    Generated shop, product, and editorial pages
-shared/         Shared runtime utilities and configuration
-scripts/        Build, development, and verification tooling
-docs/           Technical notes and production screenshots
-dist/           Generated deployable site
-```
-
-## Local development
-
-Requirements: Node.js 20 or newer.
+## Run locally
 
 ```bash
 npm install
-npm run dev
-```
-
-The development server opens at `http://localhost:8788/` by default. Public shop identity and catalog settings live in [`shop.config.json`](shop.config.json).
-
-## Build and verify
-
-```bash
+npm run build:pages
 npm run build
-npm run check
+npm run dev:static -- --dist
 ```
 
-For focused checks, the project also provides `check:leak`, `check:images`, `check:pages`, `check:controls`, `check:hero`, and `check:port` scripts.
+The default development address is `http://localhost:8788`. If that port is occupied, set `STATIC_DEV_PORT` before starting the server.
 
-## Deploy
+## Verification
 
 ```bash
-npm run deploy
+npm run check:leak
+node scripts/pagecheck.mjs http://localhost:8788
+node scripts/deadctl.mjs http://localhost:8788
+node scripts/herocheck.mjs http://localhost:8788
+node scripts/portcheck.mjs http://localhost:8788
+node scripts/imgsweep.mjs http://localhost:8788
+node scripts/audit-run.mjs http://localhost:8788
 ```
 
-Wrangler publishes the generated `dist/` directory to the `digini` Worker. The production custom domain is [digini.selldone.shop](https://digini.selldone.shop/).
+The checks cover identity leakage, distinct content routes, valid anchors, deliberately unfilled merchant facts, interactive controls, responsive hero geometry, template portability, image containment, accessibility, typography, overflow, and network failures.
 
-## Configuration and documentation
+## Configuration
 
-- [`SETUP.md`](SETUP.md) explains how to connect the storefront to another Selldone shop.
-- [`docs/technical-reference.md`](docs/technical-reference.md) documents architecture, API boundaries, OAuth, and build behavior.
-- [`DECISIONS.md`](DECISIONS.md) records the design and implementation decisions behind the storefront.
+`shop.config.json` is the single source of truth for shop identity, hero settings, category copy, contact facts, and OAuth metadata. Run `npm run setup -- --shop-id 15574 --handle homex --name Homex --domain homex.myselldone.com` after changing shop identity fields.
 
-## Demo notice
+Contact, address, company-registration, and opening-hours fields are intentionally not invented. The generated policy and contact pages visibly mark those merchant-owned facts as unfilled demonstration content.
 
-Digini is a demonstration storefront. No real order is placed, and sample customer reviews are visibly labeled as demonstration content.
+## Deployment
 
-<sub>Production screenshots captured from the live storefront on 18 August 2026.</sub>
+The static build is written to `dist/`. `wrangler.toml` is configured for the `selldone-homex` Worker and the preferred custom domain `homex.selldone.shop`. Deployment URLs and the public PKCE client id are added only after the production Worker exists, so callback URLs are exact rather than guessed.
+
+## Safety note
+
+This is a demonstration storefront. The checkout UI does not create a real Selldone order or charge a payment method. Sample reviews are explicitly labeled. Newsletter submission is the only visitor-facing write in the static demo.

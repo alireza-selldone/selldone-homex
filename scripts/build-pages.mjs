@@ -51,7 +51,7 @@ for (const [k, v] of Object.entries(TOKENS)) if (!v) delete TOKENS[k];
 const UNFILLED = new Set(["SHOP_EMAIL", "SHOP_PHONE", "SHOP_ADDRESS", "COMPANY_REGISTRATION"]);
 
 const PAGES = {
-  "about-us": ["About Digini", "How Digini selects useful technology and helps customers choose with confidence."],
+  "about-us": ["About Homex", "How Homex selects useful furniture and helps customers choose with confidence."],
   terms: ["Client care", "Terms and conditions covering orders, prices, delivery, returns and warranty."],
   privacy: ["Client care", "What personal information this shop collects, why, and how to have it removed."],
   "contact-us": ["Client care", "How to reach us, what to include, and how long a reply takes."],

@@ -99,7 +99,7 @@ const prime = async (p) => {
 const b = await chromium.launch();
 const ctx = await b.newContext({ viewport: { width: 1440, height: 900 } });
 await ctx.addInitScript((v) => localStorage.setItem("storefront_bag_v1", v),
-  JSON.stringify([{ id: 710103, qty: 1 }, { id: 710041, qty: 2 }]));
+  JSON.stringify([{ id: 710462, qty: 1 }, { id: 710456, qty: 2 }]));
 const p = await ctx.newPage();
 
 let checked = 0, failed = 0;

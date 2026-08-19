@@ -1,6 +1,4 @@
-/* Digini — storefront UI.
-   Ported from design-reference/app.js. Behaviour is the prototype's; the data
-   behind it is live Selldone. A capability demonstration: no order is placed. */
+/* Homex storefront UI — live Selldone data inside an original editorial shell. */
 
 import {
   loadCatalog, money, img, catOf, byId,
@@ -15,37 +13,36 @@ let CAT = null;
 
 /* ---------- Shared storefront chrome ----------
    Every public page uses one header and footer contract. Older standalone
-   pages still carry their original Watchino markup as a no-JS fallback; this
+   pages still carry their reusable template markup as a no-JS fallback; this
    replacement runs before any header behavior is wired, so the live interface
    is identical everywhere and future chrome changes have one source. */
-const SHARED_HEADER_HTML = `<header class="hdr digini-header">
-  <div class="topbar"><span class="topbar__long" data-announce-long>Curated electronics · Secure checkout · Helpful buying guides</span><span class="topbar__short" data-announce-short>Curated tech · Secure checkout</span></div>
-  <div class="wrap hdr__in">
+const SHARED_HEADER_HTML = `<header class="hdr homex-header">
+  <div class="topbar"><span class="topbar__long" data-announce-long>Complimentary delivery on selected pieces · Secure checkout · Thoughtful design guides</span><span class="topbar__short" data-announce-short>Selected delivery included · Secure checkout</span></div>
+  <div class="wrap hdr__in homex-head-main">
     <button class="burger mobonly" type="button" data-open="nav" aria-label="Open menu"><span></span></button>
-    <a class="logo digini-logo" href="index.html" aria-label="Digini home">DIGI<span>NI</span></a>
-    <nav class="nav header-nav" aria-label="Main"><a href="shop.html"><b>Shop All</b></a><a href="shop.html?cat=laptop">Computers</a><a href="shop.html?cat=monitors">Displays</a><a href="shop.html?cat=digital-camera">Cameras</a><a href="shop.html?cat=headphones">Audio</a><a href="shop.html?cat=hard-drive">Storage</a><a href="shop.html?cat=rv">Portable Power</a><a href="/blog">Buying Guides</a></nav>
+    <a class="logo homex-logo" href="index.html" aria-label="Homex home">homex<span>.</span></a>
+    <button class="header-search" type="button" data-open="search" aria-label="Search products"><span>What can we help you find?</span><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M16.5 16.5 21 21"/></svg></button>
     <div class="hdr__tools">
-      <button class="header-search" type="button" data-open="search" aria-label="Search products"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M16.5 16.5 21 21"/></svg><span>Search</span></button>
       <div class="hdr__act">
-        <button class="iconbtn" type="button" data-open="account" aria-label="Account"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 3.6-6 8-6s8 2 8 6"/></svg></button>
-        <button class="iconbtn" type="button" data-open="cart" aria-label="Open bag, 0 items"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 8h12l-1 12H7L6 8Z"/><path d="M9 8V6a3 3 0 0 1 6 0v2"/></svg><span class="cartdot" data-cart-count hidden>0</span></button>
+        <button class="iconbtn" type="button" data-open="account" aria-label="Account"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 3.6-6 8-6s8 2 8 6"/></svg><span class="homex-action-label">Account</span></button>
+        <button class="iconbtn" type="button" data-open="cart" aria-label="Open bag, 0 items"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 8h12l-1 12H7L6 8Z"/><path d="M9 8V6a3 3 0 0 1 6 0v2"/></svg><span class="homex-action-label">Cart</span><span class="cartdot" data-cart-count hidden>0</span></button>
       </div>
     </div>
-    <div class="mega"><div class="mega__grid" id="megagrid"></div></div>
   </div>
+  <div class="homex-navrow homex-navrow"><div class="wrap"><nav class="nav header-nav" aria-label="Main"><a href="shop.html"><b>Furniture</b></a><a href="shop.html?cat=sofa-bed">Living</a><a href="shop.html?cat=dining-table">Dining</a><a href="shop.html?cat=beds">Bedroom</a><a href="shop.html?cat=office-tables">Office</a><a href="shop.html?cat=home-decor">Decor</a><a href="/blog">Journal</a></nav><div class="mega"><div class="mega__grid" id="megagrid"></div></div></div></div>
 </header>`;
 
-const SHARED_FOOTER_HTML = `<footer class="ft ink"><div class="wrap"><div class="ft__cols"><div class="ft__col ft__brand"><p class="logo digini-logo">DIGI<span>NI</span></p><p class="lede" data-brand-tagline>Smart technology, clearly chosen.</p><p class="demonote">Demonstration storefront. No order is ever placed.</p><div class="ft__socials" aria-label="Social media"><span role="img" aria-label="Instagram"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="4" width="16" height="16" rx="4"/><circle cx="12" cy="12" r="3.5"/><circle cx="17.5" cy="6.5" r="1" class="fill"/></svg></span><span role="img" aria-label="X"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 5l12 14M18 5 6 19"/></svg></span><span role="img" aria-label="YouTube"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="6" width="18" height="12" rx="4"/><path d="m10 9 5 3-5 3Z" class="fill"/></svg></span><span role="img" aria-label="LinkedIn"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="9" width="3" height="10" class="fill"/><circle cx="5.5" cy="5.5" r="1.7" class="fill"/><path d="M11 19v-6c0-2 1.2-3.2 3.1-3.2 2 0 3 1.3 3 3.4V19M11 10v9"/></svg></span></div></div><div class="ft__col"><h4>Categories</h4><ul data-collections></ul></div><div class="ft__col"><h4>Help</h4><ul><li><a href="/about-us">About Digini</a></li><li><a href="/blog">Buying guides</a></li><li><a href="/terms#delivery">Shipping</a></li><li><a href="/terms#returns">Returns</a></li><li><a href="/contact-us">Contact us</a></li></ul></div><div class="ft__col"><h4>Policies</h4><ul><li><a href="/terms">Terms</a></li><li><a href="/privacy">Privacy</a></li><li><a href="/terms#warranty">Warranty</a></li></ul></div></div><div class="ft__bar"><span>© 2026 Digini · Technology for every day</span><span class="ft__payments" aria-label="Accepted payment methods"><span class="ft__payment ft__payment--visa" role="img" aria-label="Visa">VISA</span><span class="ft__payment ft__payment--mastercard" role="img" aria-label="Mastercard"><i></i><i></i></span><span class="ft__payment ft__payment--amex" role="img" aria-label="American Express">AMEX</span></span></div></div></footer>`;
+const SHARED_FOOTER_HTML = `<footer class="ft ink homex-footer"><div class="wrap"><div class="ft__cols"><div class="ft__col ft__brand"><p class="logo homex-logo">homex<span>.</span></p><p class="lede" data-brand-tagline>Furniture that makes room for living.</p><div class="ft__socials" aria-label="Social media"><span role="img" aria-label="Instagram"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="4" width="16" height="16" rx="4"/><circle cx="12" cy="12" r="3.5"/><circle cx="17.5" cy="6.5" r="1" class="fill"/></svg></span><span role="img" aria-label="Pinterest"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="8"/><path d="M9.5 18c1-3 1.7-5.2 2.3-8.2.3-1.6 2.8-1.2 2.5.6-.3 2-2.8 2.6-3.7 1.1-1.5-2.6.8-5.1 3.5-4.5 3 .7 3.8 4.3 2.2 6.5-1.4 2-4 2.6-5.9 1.3"/></svg></span><span role="img" aria-label="YouTube"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="6" width="18" height="12" rx="4"/><path d="m10 9 5 3-5 3Z" class="fill"/></svg></span></div></div><div class="ft__col"><h4>Explore</h4><ul data-collections></ul></div><div class="ft__col"><h4>Customer care</h4><ul><li><a href="/about-us">About Homex</a></li><li><a href="/blog">Journal</a></li><li><a href="/terms#delivery">Shipping</a></li><li><a href="/terms#returns">Returns</a></li><li><a href="/contact-us">Contact us</a></li></ul></div><div class="ft__col"><h4>Stay inspired</h4><p class="lede">New furniture, room ideas, and practical design notes.</p><div class="sub"><label class="sr" for="footer-email">Email address</label><input id="footer-email" type="email" placeholder="Email address"/><button type="button">Subscribe</button></div><ul class="ft__policy"><li><a href="/terms">Terms</a></li><li><a href="/privacy">Privacy</a></li></ul></div></div><div class="ft__bar"><span>© 2026 Homex · Designed for everyday rooms</span><span class="ft__payments" aria-label="Accepted payment methods"><span class="ft__payment ft__payment--visa" role="img" aria-label="Visa">VISA</span><span class="ft__payment ft__payment--mastercard" role="img" aria-label="Mastercard"><i></i><i></i></span><span class="ft__payment ft__payment--amex" role="img" aria-label="American Express">AMEX</span></span></div></div></footer>`;
 
 const SHARED_OVERLAYS_HTML = `<div class="drawer ink" role="dialog" aria-modal="true" aria-label="Menu" aria-hidden="true"><div class="drawer__top"><span class="eyebrow">Menu</span><button class="xbtn" type="button" data-close>Close</button></div><nav data-drawer-nav aria-label="Mobile"></nav></div>
-<aside class="cart" role="dialog" aria-modal="true" aria-label="Shopping bag" aria-hidden="true"><div class="cart__hd"><span class="eyebrow mb0" data-cart-label>Your bag · 0</span><button class="xbtn" type="button" data-close>Close</button></div><div class="cart__body" data-cart-body></div><div class="cart__ft" data-cart-foot hidden><div class="sum__tot"><span class="eyebrow mb0">Subtotal</span><span class="price" data-cart-total>$0</span></div><a class="btn btn--full" href="checkout.html">Checkout</a><p class="cap center">Demonstration only — no order is placed.</p></div></aside>
-<aside class="sheet sheet--search" role="dialog" aria-modal="true" aria-label="Search products" aria-hidden="true"><div class="sheet__hd"><span class="eyebrow mb0">Search Digini</span><button class="xbtn" type="button" data-close>Close</button></div><div class="sheet__pad"><label class="sr" for="q">Search products</label><input id="q" type="search" autocomplete="off" placeholder="Product, brand, or category" data-search-input data-autofocus /><p class="cap" data-search-count></p></div><div class="sheet__body" data-search-results></div></aside>
+<aside class="cart" role="dialog" aria-modal="true" aria-label="Shopping bag" aria-hidden="true"><div class="cart__hd"><span class="eyebrow mb0" data-cart-label>Your bag · 0</span><button class="xbtn" type="button" data-close>Close</button></div><div class="cart__body" data-cart-body></div><div class="cart__ft" data-cart-foot hidden><div class="sum__tot"><span class="eyebrow mb0">Subtotal</span><span class="price" data-cart-total>$0</span></div><a class="btn btn--full" href="checkout.html">Checkout</a><p class="cap center">Taxes and delivery are calculated at checkout.</p></div></aside>
+<aside class="sheet sheet--search" role="dialog" aria-modal="true" aria-label="Search products" aria-hidden="true"><div class="sheet__hd"><span class="eyebrow mb0">Search Homex</span><button class="xbtn" type="button" data-close>Close</button></div><div class="sheet__pad"><label class="sr" for="q">Search products</label><input id="q" type="search" autocomplete="off" placeholder="Product, category, or material" data-search-input data-autofocus /><p class="cap" data-search-count></p></div><div class="sheet__body" data-search-results></div></aside>
 <aside class="sheet sheet--account" role="dialog" aria-modal="true" aria-label="Account" aria-hidden="true"><div class="sheet__hd"><span class="eyebrow mb0">Account</span><button class="xbtn" type="button" data-close>Close</button></div><div class="sheet__body" data-account-body></div></aside>
 <div class="scrim"></div>`;
 
 function initSharedChrome() {
   document.querySelectorAll(".rail").forEach((rail) => rail.remove());
-  document.querySelector(".page")?.classList.add("digini-page");
+  document.querySelector(".page")?.classList.add("homex-page");
 
   const header = document.querySelector("header.hdr,header.cohdr");
   if (header) header.outerHTML = SHARED_HEADER_HTML;
@@ -60,8 +57,12 @@ function initSharedChrome() {
 
 /* ---------- Shared card ---------- */
 export function cardHTML(p) {
+  const tags = (Array.isArray(p.raw?.tags) ? p.raw.tags : String(p.raw?.tags || "").split(","))
+    .map((tag) => String(tag).trim().toLowerCase());
+  const badge = tags.includes("trending") ? "Trending" : tags.includes("best seller") ? "Best seller" : "";
   return `<a class="pcard" href="product.html?id=${p.id}">
     <div class="pcard__art">
+      ${badge ? `<span class="pcard__badge">${badge}</span>` : ""}
       <img src="${p.image}" alt="${esc(p.name)}" loading="lazy" width="500" height="500">
     </div>
     <p class="eyebrow" style="margin-bottom:6px">${esc(p.catName)}</p>
@@ -131,7 +132,7 @@ async function fillBrandCopy() {
 }
 
 /* ---------- Theme picker ---------- */
-const DIGINI_THEMES = [
+const HOMEX_THEMES = [
   { id: "blue", name: "Ocean", description: "Deep blue and bright red", swatch: "#005BD4" },
   { id: "violet", name: "Violet", description: "Electric purple and pink", swatch: "#6D28D9" },
   { id: "emerald", name: "Emerald", description: "Modern green and orange", swatch: "#047857" },
@@ -140,8 +141,8 @@ const DIGINI_THEMES = [
 ];
 
 function initThemePicker() {
-  const storageKey = "digini_theme_v1";
-  const themeIds = new Set(DIGINI_THEMES.map(({ id }) => id));
+  const storageKey = "homex_theme_v1";
+  const themeIds = new Set(HOMEX_THEMES.map(({ id }) => id));
   let activeTheme = "blue";
 
   try {
@@ -153,7 +154,7 @@ function initThemePicker() {
 
   const applyTheme = (theme, persist = true) => {
     const nextTheme = themeIds.has(theme) ? theme : "blue";
-    const themeDetails = DIGINI_THEMES.find(({ id }) => id === nextTheme);
+    const themeDetails = HOMEX_THEMES.find(({ id }) => id === nextTheme);
     document.documentElement.dataset.theme = nextTheme;
     document.querySelectorAll("[data-theme-option]").forEach((button) => {
       button.setAttribute("aria-checked", String(button.dataset.themeOption === nextTheme));
@@ -181,7 +182,7 @@ function initThemePicker() {
     </button>
     <span class="theme-picker__menu" data-theme-menu role="menu" aria-label="Colour theme" hidden>
       <span class="theme-picker__title">Colour theme</span>
-      ${DIGINI_THEMES.map(({ id, name, description, swatch }) =>
+      ${HOMEX_THEMES.map(({ id, name, description, swatch }) =>
         `<button class="theme-picker__item" type="button" role="menuitemradio" data-theme-option="${id}" aria-checked="false" style="--swatch:${swatch}">
           <span class="theme-picker__swatch" aria-hidden="true"></span>
           <span><strong>${name}</strong><small>${description}</small></span>
@@ -347,12 +348,16 @@ export function initAcc(root = document) {
 function fillNav() {
   const mega = document.getElementById("megagrid");
   if (mega) {
-    mega.innerHTML = CAT.cats.map((c) => `
-      <a class="mega__item" href="shop.html?cat=${c.slug}">
-        <img src="${c.image}" alt="${esc(c.name)} — ${esc(c.heroName)}" loading="lazy" width="200" height="200">
-        <b>${esc(c.name)}</b>
-        <span class="cap">${c.count} products</span>
-      </a>`).join("");
+    const bySlug = new Map(CAT.cats.map((category) => [category.slug, category]));
+    const groups = [
+      ["Living room", ["sofa-bed", "chairs", "coffee-tables", "home-and-living"]],
+      ["Dining room", ["dining-table", "chairs", "cabinets"]],
+      ["Bedroom", ["beds", "drawers", "vanity-desks"]],
+      ["Office", ["office-tables", "office-chairs", "gaming-chairs"]],
+      ["Finishing touches", ["home-decor", "rugs", "lighting"]],
+    ];
+    mega.innerHTML = groups.map(([title, slugs]) => `<section class="mega__group"><h3>${title}</h3>${slugs.map((slug) => bySlug.get(slug)).filter(Boolean).map((category) => `<a href="shop.html?cat=${category.slug}">${esc(category.name)}<small>${category.count}</small></a>`).join("")}</section>`).join("") +
+      `<a class="mega__feature" href="shop.html?cat=chairs"><img src="assets/homex/living-editorial.webp" alt="Warm contemporary living room" width="1536" height="1024"><b>Living, considered</b></a>`;
   }
 
   document.querySelectorAll("[data-collections]").forEach((ul) => {
@@ -445,11 +450,10 @@ export function closeLightbox() {
    state and a spoken result — a form that silently does nothing is worse than
    one that is visibly absent. */
 function initNewsletter() {
-  const box = document.querySelector(".sub");
-  if (!box) return;
-  const input = box.querySelector("input[type=email]");
-  const btn = box.querySelector("button");
-  if (!input || !btn) return;
+  document.querySelectorAll(".sub").forEach((box) => {
+    const input = box.querySelector("input[type=email]");
+    const btn = box.querySelector("button");
+    if (!input || !btn) return;
 
   const say = document.createElement("p");
   say.className = "cap sub__say";
@@ -483,7 +487,7 @@ function initNewsletter() {
       input.value = "";
     } catch (err) {
       show(err.message || "That did not go through. Try again shortly.", true);
-      console.error("[digini] subscribe failed", err);
+      console.error("[homex] subscribe failed", err);
     } finally {
       busy = false;
       btn.disabled = false;
@@ -494,6 +498,7 @@ function initNewsletter() {
   btn.addEventListener("click", send);
   input.addEventListener("keydown", (e) => {
     if (e.key === "Enter") { e.preventDefault(); send(); }
+  });
   });
 }
 
@@ -547,7 +552,7 @@ function initSearch() {
 
 /* ---------- Account ---------- */
 /* Authorization Code + PKCE, public client. Customer-facing copy never names
-   Selldone: the customer is signing in to Digini. Selldone is our
+   Selldone: the customer is signing in to Homex. Selldone is our
    infrastructure, not the shop's brand.
 
    Nothing raw is ever shown to a visitor. A failure gets a plain sentence here
@@ -580,7 +585,7 @@ async function renderAccount() {
   try {
     s = await storefrontAuth.session();
   } catch (err) {
-    console.error("[digini] session lookup failed", err);
+    console.error("[homex] session lookup failed", err);
     body.innerHTML = `<div class="acct">
       <p class="lede" style="margin-bottom:20px">We could not check whether you are signed in. Try again in a moment.</p>
       <button class="btn btn--full" type="button" data-signin>Sign in</button>
@@ -637,7 +642,7 @@ async function renderOrders(host, token) {
         <span class="price">${money(o.total)}</span>
       </div>`).join("");
   } catch (err) {
-    console.error("[digini] order history failed", err);
+    console.error("[homex] order history failed", err);
     host.innerHTML = `<p class="cap" style="margin:22px 0">Your orders could not be loaded just now.</p>`;
   }
 }
@@ -713,11 +718,11 @@ document.addEventListener("DOMContentLoaded", async () => {
       e.hidden = false;
       e.textContent = "The catalog could not be loaded from Selldone. Refresh to try again.";
     });
-    console.error("[digini] catalog load failed", err);
+    console.error("[homex] catalog load failed", err);
     return;
   }
 
-  window.__DIGINI__ = CAT; // inspection handle for verification
+  window.__HOMEX__ = CAT; // inspection handle for verification
   fillNav();
   renderBag();
   document.addEventListener("bag:changed", renderBag);

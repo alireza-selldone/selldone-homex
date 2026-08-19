@@ -16,7 +16,7 @@ import { mkdirSync, readdirSync, statSync } from "fs";
 import { join, dirname } from "path";
 import { fileURLToPath } from "url";
 
-const BASE = (process.argv[2] || "https://watchino.selldone.shop").replace(/\/+$/, "");
+const BASE = (process.argv[2] || "http://localhost:8788").replace(/\/+$/, "");
 const OUT = join(dirname(fileURLToPath(import.meta.url)), "..", "docs", "pack");
 mkdirSync(OUT, { recursive: true });
 
@@ -31,7 +31,7 @@ const TOKEN = JSON.stringify({
   token_type: "Bearer",
 });
 const PROFILE = { user: { name: "Robert Donnie", email: "demo@example.com", id: 8 } };
-const BAG = JSON.stringify([{ id: 710103, qty: 1 }, { id: 710041, qty: 2 }]);
+const BAG = JSON.stringify([{ id: 710462, qty: 1 }, { id: 710456, qty: 2 }]);
 
 async function settle(p) {
   await p.waitForLoadState("networkidle", { timeout: 8000 }).catch(() => {});
@@ -140,7 +140,7 @@ console.log(`Capturing from ${BASE}\n`);
      logarithmic sliders, so it has to be driven through the UI. Assert the
      count actually drops — a filtered screenshot that filtered nothing is
      worse than no screenshot. */
-  await go(p, "/shop.html?cat=haute-horlogerie", "#pgrid .pcard");
+  await go(p, "/shop.html?cat=dining-table", "#pgrid .pcard");
   const beforeN = await p.locator("#pgrid .pcard").count();
   await p.$eval("#phi", (el) => {
     el.value = "94";
@@ -155,7 +155,7 @@ console.log(`Capturing from ${BASE}\n`);
      3 and looks like a successful filter. It has to be a real subset — fewer
      than before, more than none, and no empty-state heading. */
   const empty = await p.locator("text=Nothing in this range").count();
-  console.log(`     haute-horlogerie ${beforeN} -> ${afterN} with band ${String(band).trim()}`);
+  console.log(`     dining-table ${beforeN} -> ${afterN} with band ${String(band).trim()}`);
   if (empty) console.log("  !! no results — 08 shows the empty state, not faceting");
   else if (afterN >= beforeN || afterN === 0) console.log("  !! band is not a real subset — 08 would prove nothing");
   await shoot(p, "08-shop-filtered.png");
@@ -165,7 +165,7 @@ console.log(`Capturing from ${BASE}\n`);
 /* ---- 09-10 product, with a variant actually selected ---- */
 {
   const { ctx, p } = await page();
-  await go(p, "/product.html?id=709761", "#pdp h1");
+  await go(p, "/product.html?id=710462", "#pdp h1");
   await p.waitForSelector(".sw", { timeout: 30000 });
   await shoot(p, "09-product.png");
   const before = await p.textContent("[data-price]");
@@ -224,7 +224,7 @@ for (const [name, signedIn] of [["14-account-signedout.png", false], ["15-accoun
 for (const [name, path, ready] of [
   ["17-mobile-home.png", "/", "#catgrid .cat"],
   ["18-mobile-shop.png", "/shop.html", "#pgrid .pcard"],
-  ["19-mobile-product.png", "/product.html?id=709761", "#pdp h1"],
+  ["19-mobile-product.png", "/product.html?id=710462", "#pdp h1"],
 ]) {
   const { ctx, p } = await page({ width: 390, height: 844 });
   await go(p, path, ready);

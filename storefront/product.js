@@ -1,6 +1,6 @@
-/* Digini — product detail. Works for every product via ?id=.
+/* Homex — product detail. Works for every product via ?id=.
    Ported from design-reference initPDP(), with three corrections agreed with
-   the client: real finishes only, real spec data instead of invented calibers,
+   the client: real finishes only, real spec data instead of invented details,
    and clearly disclosed sample reviews for the demonstration storefront. */
 
 import {
@@ -13,11 +13,9 @@ import { cardHTML, esc, initAcc, openLightbox } from "./app.js";
 /* Spec keys worth surfacing, in reading order. Only those the record actually
    holds are rendered; nothing is filled in. */
 const SPEC_ORDER = [
-  "Movement Type", "Movement", "Power Reserve", "Material", "Case Material",
-  "Case diameter", "Dial Size", "Dial Color", "Water Resistance",
-  "Strap Material", "Band Material", "Band Color", "Band width",
-  "Bezel material", "Clasp", "Style", "Model number", "Item weight",
-  "Special Features", "Design Style",
+  "Material", "Frame Material", "Upholstery", "Finish", "Color",
+  "Width", "Depth", "Height", "Seat Height", "Dimensions", "Item weight",
+  "Assembly", "Care", "Style", "Model number", "Special Features", "Design Style",
 ];
 
 function specRows(spec) {
@@ -39,11 +37,11 @@ function specRows(spec) {
 }
 
 const SAMPLE_REVIEWS = [
-  ["Maya R.", "Easy to set up, thoughtfully designed, and exactly as described. It has fitted naturally into my everyday routine."],
-  ["Daniel K.", "The build quality feels excellent and the controls are straightforward. Delivery was quick and everything arrived safely."],
-  ["Sofia L.", "A polished product with the right balance of performance and simplicity. I would happily choose it again."],
-  ["Noah T.", "The details were clear, the purchase was easy, and the product has performed reliably from day one."],
-  ["Ava M.", "It looks great, works smoothly, and feels carefully made. A very strong choice for daily use."],
+  ["Maya R.", "Thoughtfully designed and exactly as described. The proportions sit naturally in the room and the material feels considered."],
+  ["Daniel K.", "The build quality feels excellent. Delivery was well coordinated and every piece arrived protected."],
+  ["Sofia L.", "A polished piece with the right balance of comfort and structure. I would happily choose it again."],
+  ["Noah T.", "The dimensions were clear, the purchase was easy, and the finish looks even better in natural light."],
+  ["Ava M.", "It looks beautiful, feels solid, and has made the room much more useful for daily life."],
 ];
 
 function ratingBlock(p) {
@@ -75,11 +73,11 @@ async function initPDP(cat) {
       <p class="h1" style="margin-bottom:14px">Product not found</p>
       <p class="lede" style="margin:0 auto 28px">${id ? `Product ${esc(id)} is not in the catalog.` : "No product was requested."}</p>
       <a class="btn" href="shop.html">Browse all products</a></div>`;
-    document.title = "Product not found — Digini";
+    document.title = "Product not found — Homex";
     return;
   }
 
-  document.title = `${p.name} — Digini`;
+  document.title = `${p.name} — Homex`;
   const c = catOf(cat, p.cat);
   const others = cat.products.filter((x) => x.cat === p.cat && x.id !== p.id);
 
@@ -89,7 +87,7 @@ async function initPDP(cat) {
     const detail = await loadProduct(p.id);
     if (detail.gallery.length) gallery = detail.gallery;
   } catch (e) {
-    console.warn("[digini] gallery fallback to icon", e);
+    console.warn("[homex] gallery fallback to icon", e);
   }
 
   /* Every variant the shop defines, not a filtered subset. */
@@ -153,7 +151,7 @@ async function initPDP(cat) {
         <button class="btn btn--primary" type="button" data-add="${p.id}">Add to bag</button>
         <button class="btn btn--buy" type="button" data-buy="${p.id}">Buy now</button>
       </div>
-      <p class="cap" style="margin-top:14px">Demonstration storefront &mdash; no order is placed.</p>
+      <p class="cap" style="margin-top:14px">Taxes and delivery are calculated at checkout.</p>
 
       <div class="pinfo-accordions">
         <div class="acc is-open">
@@ -194,6 +192,8 @@ async function initPDP(cat) {
   const rel = document.getElementById("related");
   const relatedProducts = (others.length ? others : cat.products.filter((x) => x.id !== p.id)).slice(0, 12);
   if (rel) rel.innerHTML = relatedProducts.map(cardHTML).join("");
+  const relatedSection = document.querySelector("[data-related-section]");
+  if (relatedSection) relatedSection.hidden = relatedProducts.length === 0;
 
   const relatedViewport = document.querySelector("[data-related-viewport]");
   const relatedControls = document.querySelector("[data-related-controls]");

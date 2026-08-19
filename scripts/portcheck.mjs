@@ -120,11 +120,13 @@ const browser = await chromium.launch();
 
 console.log("\nA DIFFERENT SHOP — none of this repo's category ids appear in the data");
 console.log("-".repeat(66));
-for (const [nCats, wantCols] of [[3, 5], [4, 5], [5, 5], [6, 5], [7, 5], [8, 5], [9, 5], [10, 5]]) {
+for (const nCats of [3, 4, 5, 6, 7, 8, 9, 10]) {
   const r = await run(browser, { nCats, cfg: REAL_CFG, label: `${nCats} categories` });
-  const ok = r.tiles === nCats && r.cols === wantCols && !r.hidden;
+  const wantTiles = Math.min(nCats, 6);
+  const wantCols = 6;
+  const ok = r.tiles === wantTiles && r.cols === wantCols && !r.hidden;
   const line = `${String(nCats).padStart(2)} categories -> ${r.tiles} tiles, ${r.cols} columns`;
-  if (ok) pass(line); else fail(`${line} (expected ${nCats} tiles, ${wantCols} columns, section visible)`);
+  if (ok) pass(line); else fail(`${line} (expected ${wantTiles} featured tiles, ${wantCols} columns, section visible)`);
   if (r.errs.length) fail(`${nCats} categories: page error — ${r.errs[0]}`);
 }
 
@@ -138,9 +140,9 @@ console.log("-".repeat(66));
 }
 {
   const r = await run(browser, { nCats: 12, cfg: REAL_CFG });
-  (r.tiles === 12)
-    ? pass("12 categories -> all 12 retained within the 15-category limit")
-    : fail(`12 categories -> ${r.tiles} tiles, expected 12`);
+  (r.tiles === 6)
+    ? pass("12 categories -> six featured on home; full catalogue remains in navigation and shop")
+    : fail(`12 categories -> ${r.tiles} featured tiles, expected 6`);
 }
 
 console.log("\nSLUGS DERIVED FROM LIVE TITLES");

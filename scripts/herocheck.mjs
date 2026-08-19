@@ -1,4 +1,4 @@
-/* Verify the responsive Digini campaign hero against its current design rules. */
+/* Verify the responsive Homex campaign hero against its current design rules. */
 import { chromium } from "playwright";
 
 const BASE = (process.argv[2] || "http://localhost:8788").replace(/\/+$/, "");
@@ -42,8 +42,10 @@ for (const [width, height] of [[1440, 900], [1024, 900], [820, 1000], [390, 844]
   const copyVisible = state.heading.top >= state.hero.top && state.heading.bottom <= state.hero.bottom && state.heading.text.length > 10;
   copyVisible ? pass("campaign heading is fully visible") : fail("campaign heading is clipped or empty");
   if (width <= 820) {
-    Math.round(state.image.bottom - state.image.top) === 280 ? pass("mobile image zone is 280px") : fail("mobile image zone changed");
-    state.copy.top >= state.image.bottom ? pass("mobile copy follows the image without overlap") : fail("mobile copy overlaps the image");
+    const expectedHeight = width <= 760 ? 270 : 300;
+    Math.round(state.image.bottom - state.image.top) === expectedHeight ? pass(`responsive image zone is ${expectedHeight}px`) : fail("responsive image zone changed");
+    const overlap = state.image.bottom - state.copy.top;
+    overlap <= 24.5 ? pass(overlap > 0 ? "mobile copy uses the intentional 24px overlap" : "tablet copy follows the image") : fail("copy obscures too much of the image");
   } else {
     state.copy.width < state.hero.width * .55 ? pass("desktop copy leaves the product scene visible") : fail("desktop copy obscures too much artwork");
   }

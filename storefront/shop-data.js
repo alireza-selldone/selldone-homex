@@ -11,6 +11,7 @@
 import { getPublicConfig } from "../shared/runtime-config.js";
 import { shopConfig, slugify } from "./shop-config.js";
 import { selldoneImagePathToUrl } from "../dashboard/features/selldone-images.js";
+import { HOMEX_JOURNAL } from "./journal-data.js";
 
 const cfg = getPublicConfig();
 
@@ -154,6 +155,12 @@ export function excerpt(text, max = 190) {
 export const articleDate = (a) =>
   a.schedule_at || a.created_at || null;   // schedule_at is cleared once it fires
 
+function fallbackJournal() {
+  const cats = HOMEX_JOURNAL.map((p) => p.category);
+  const posts = HOMEX_JOURNAL.map(({ body, description, ...p }) => ({ ...p, excerpt: excerpt(description) }));
+  return { posts, cats, total: posts.length };
+}
+
 /* Categories alone — one request. The article page needs a name for one id and
    should not pull the whole listing to get it. */
 export async function loadBlogCategories() {
@@ -164,10 +171,16 @@ export async function loadBlogCategories() {
 }
 
 export async function loadBlog() {
-  const [listing, extra] = await Promise.all([
-    asJson(URL_BLOGS("?limit=100")),
-    asJson(URL_BLOGS("?extra=true")).catch(() => ({ categories: [] })),
-  ]);
+  let listing, extra;
+  try {
+    [listing, extra] = await Promise.all([
+      asJson(URL_BLOGS("?limit=100")),
+      asJson(URL_BLOGS("?extra=true")).catch(() => ({ categories: [] })),
+    ]);
+  } catch {
+    return fallbackJournal();
+  }
+  if (!(listing.articles || []).length) return fallbackJournal();
 
   const cats = (extra.categories || []).map((c) => ({
     id: c.id, name: c.category, count: Number(c.articles) || 0,
@@ -199,15 +212,16 @@ export async function loadBlog() {
 }
 
 export async function loadArticle({ blogId, slug }) {
+  const local = HOMEX_JOURNAL.find((p) => (blogId && p.blogId === Number(blogId)) || (slug && p.slug === slug));
   let id = blogId;
   if (!id && slug) {
     const listing = await asJson(URL_BLOGS("?limit=100"));
     id = (listing.articles || []).find((a) => a.slug === slug)?.parent_id;
-    if (!id) return null;
+    if (!id) return local ? { ...local, categoryId: local.category.id, author: "Homex" } : null;
   }
-  if (!id) return null;
+  if (!id) return local ? { ...local, categoryId: local.category.id, author: "Homex" } : null;
   const r = await asJson(URL_BLOG(id)).catch(() => null);
-  if (!r?.article) return null;
+  if (!r?.article) return local ? { ...local, categoryId: local.category.id, author: "Homex" } : null;
   const a = r.article;
   return {
     id: a.id, blogId: id, slug: a.slug, title: a.title, body: a.body,

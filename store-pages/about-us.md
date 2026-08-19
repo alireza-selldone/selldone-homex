@@ -11,19 +11,19 @@
 
 ## Who we are
 
-{{SHOP_NAME}} is an online electronics store built around a simple idea: make useful technology easier to understand, compare, and choose.
+{{SHOP_NAME}} is an online furniture store built around a simple idea: make considered rooms easier to create, one useful piece at a time.
 
-Every item in our catalogue is selected for a clear everyday purpose. We organize products around the way people work, create, travel, listen, and stay connected, so the important differences are easier to see.
+Every item in our catalogue is selected for a clear everyday purpose. We organize furniture around the way people gather, rest, work, store, and live, so scale, material, finish, and function are easier to compare.
 
 ## How we choose what we sell
 
 Three questions decide whether something makes it into the catalogue.
 
-**Is it fit for purpose?** We look at practical specifications, compatibility, construction, and the jobs a product is designed to handle.
+**Is it fit for purpose?** We look at construction, dimensions, materials, comfort, and the room a piece is designed to support.
 
 **Is it honestly priced?** We would rather carry one good option at a fair price than four variations designed to make a fifth look reasonable.
 
-**Is the choice clear?** Categories, specifications, and buying guides should help customers compare products without decoding unnecessary jargon.
+**Is the choice clear?** Categories, specifications, and design guides should help customers compare pieces without decoding unnecessary jargon.
 
 ## What you can expect from us
 
@@ -33,11 +33,11 @@ Three questions decide whether something makes it into the catalogue.
 
 **A person, not a queue.** Write to us and a person reads it. Most questions are answered within one working day.
 
-**Careful packing.** Things arrive the way they left. If something is damaged in transit, that is on us to fix, not on you to prove.
+**Careful delivery.** Furniture should arrive the way it left. If something is damaged in transit, we work with you to put it right.
 
 ## After the sale
 
-The relationship does not end when the parcel does. If something goes wrong within the returns window, we make it right. If it goes wrong later, we will still help you find a solution — a repair, a part, or honest advice about whether it is worth fixing.
+The relationship does not end at delivery. If something goes wrong within the returns window, we make it right. If it goes wrong later, we will still help you find a solution — care guidance, a replacement part, or honest advice about repair.
 
 ## Where we are
 

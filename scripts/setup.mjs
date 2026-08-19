@@ -4,7 +4,7 @@
  * It must NOT ask the user which shop: they already chose one when they
  * connected the MCP connector, and asking again is a step that need not exist.
  *
- *   node scripts/setup.mjs --shop-id 8460 --handle Watchino --name Watchino
+ *   node scripts/setup.mjs --shop-id 15574 --handle homex --name Homex
  *
  * What it does, in order:
  *   1. reads the shop's live categories and products from XAPI
@@ -265,10 +265,10 @@ async function main() {
     "pajulina-shop-id": String(shopId),
     "pajulina-shop-name": name,
     "pajulina-storefront-shop-handle": handle,
+    "pajulina-client-id": cfg.oauth?.clientId || "",
+    "pajulina-app-name": cfg.oauth?.appName || `${name} Storefront`,
   };
   if (cfg.shop.domain) META["pajulina-shop-domain"] = cfg.shop.domain;
-  if (cfg.oauth.clientId) META["pajulina-client-id"] = cfg.oauth.clientId;
-  if (cfg.oauth.appName) META["pajulina-app-name"] = cfg.oauth.appName;
 
   const files = ["storefront/index.html", "dashboard/index.html", "callback/index.html"];
   let rewritten = 0;

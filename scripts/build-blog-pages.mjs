@@ -26,14 +26,14 @@ const PAGES = [
   {
     file: "blog.html",
     script: "blog.js",
-    title: "Buying Guides — Digini",
-    desc: "Practical Digini guides for choosing, using, and caring for everyday technology.",
+    title: "Journal — Homex",
+    desc: "Original Homex stories about choosing furniture, styling rooms, and caring for everyday materials.",
     main: `<main id="main" tabindex="-1">
 
         <section class="pghead ink">
           <div class="wrap">
-            <p class="eyebrow eyebrow--onink">Digini insights</p>
-            <h1 class="h1">Buying Guides</h1>
+            <p class="eyebrow eyebrow--onink">The Homex journal</p>
+            <h1 class="h1">Rooms, materials, and better choices</h1>
             <p class="pghead__meta" data-blog-count></p>
           </div>
         </section>
@@ -50,7 +50,7 @@ const PAGES = [
             </div>
             <div class="sempty" data-blog-empty hidden>
               <p class="h3" style="margin-bottom:6px">No articles yet</p>
-              <p class="cap">New Digini buying guides will appear here.</p>
+              <p class="cap">New Homex stories will appear here.</p>
             </div>
           </div>
         </section>
@@ -60,15 +60,15 @@ const PAGES = [
   {
     file: "article.html",
     script: "article.js",
-    title: "Buying Guides — Digini",
-    desc: "A practical technology guide from Digini.",
+    title: "Journal — Homex",
+    desc: "An original furniture and interiors story from Homex.",
     main: `<main id="main" tabindex="-1">
 
         <article data-article>
           <section class="pghead ink">
             <div class="wrap">
               <div class="pgcol">
-                <p class="eyebrow eyebrow--onink" data-article-cat>Digini guide</p>
+                <p class="eyebrow eyebrow--onink" data-article-cat>Homex journal</p>
                 <h1 class="h1" data-article-title>&nbsp;</h1>
                 <p class="pghead__meta" data-article-meta></p>
               </div>

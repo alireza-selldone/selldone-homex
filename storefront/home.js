@@ -1,56 +1,38 @@
-/* Digini homepage — live Selldone catalog with an editorial technology shell. */
+/* Homex homepage — live Selldone catalog with an editorial furniture shell. */
 
 import { loadCatalog, loadReviews } from "./shop-data.js";
 import { cardHTML, esc } from "./app.js";
 
-const CATEGORY_ART = {
-  108594: "laptop.png",
-  108595: "microphones.png",
-  108596: "tvs.png",
-  108597: "headphones.png",
-  108598: "digital-cameras.png",
-  108599: "power-banks.png",
-  108600: "earbuds.png",
-  108601: "flash-drives.png",
-  108602: "hard-drives.png",
-  108603: "monitors.png",
-  108604: "printers.png",
-  108605: "keyboards.png",
-  108606: "mice.png",
-  108607: "action-cameras.png",
-  108608: "rv-power-stations.png",
-};
-
 const CAMPAIGNS = [
   {
-    image: "assets/campaigns/performance-desk.png",
-    alt: "Modern performance desk with a laptop and monitor",
-    kicker: "Work smarter",
-    title: "Build your best setup.",
-    titleLines: ["Build your", "best setup."],
-    lede: "Powerful everyday technology, selected to work beautifully together.",
-    label: "Shop computers",
-    href: "shop.html?cat=laptop",
+    image: "assets/homex/hero-dining.webp",
+    alt: "Sunlit contemporary dining room with an oak table and upholstered chairs",
+    kicker: "The gathering edit",
+    title: "Made for lingering longer.",
+    titleLines: ["Made for", "lingering longer."],
+    lede: "Warm woods, soft upholstery, and room for everyone at the table.",
+    label: "Shop dining",
+    href: "shop.html?cat=dining-table",
   },
   {
-    image: "assets/campaigns/creator-essentials.png",
-    alt: "Professional camera and audio tools for creators",
-    kicker: "Create with clarity",
-    title: "Make every idea sound and look better.",
-    titleLines: ["Make every idea", "sound and look better."],
-    lede: "Cameras, microphones, and audio essentials for your next project.",
-    label: "Shop creator gear",
-    href: "shop.html?cat=digital-camera",
+    image: "assets/homex/living-editorial.webp",
+    alt: "Warm contemporary living room with a cream sofa and walnut coffee table",
+    kicker: "A quieter kind of luxury",
+    title: "Comfort, with a point of view.",
+    titleLines: ["Comfort, with", "a point of view."],
+    lede: "Sculptural seating and grounded natural materials for the everyday room.",
+    label: "Shop living",
+    href: "shop.html?cat=sofa-bed",
   },
   {
-    image: "assets/campaigns/portable-power.png",
-    alt: "Portable power equipment in an outdoor setting",
-    kicker: "Ready anywhere",
-    title: "Dependable power that travels.",
-    titleLines: ["Dependable power", "that travels."],
-    lede: "Stay connected on the road, at camp, or when the lights go out.",
-    label: "Shop portable power",
-    href: "shop.html?cat=rv",
+    image: "assets/homex/bedroom-editorial.webp",
+    alt: "Serene bedroom with an upholstered bed and walnut writing desk",
+    kicker: "Rooms that work beautifully",
+    title: "Rest, focus, repeat.",
+    titleLines: ["Rest, focus,", "repeat."],
+    lede: "A softer bedroom and a more considered place to work, in one calm palette.",
+    label: "Shop bedroom",
+    href: "shop.html?cat=beds",
   },
 ];
 
@@ -95,7 +77,6 @@ function initCampaigns() {
 }
 
 function fillHome(catalog) {
-  const ids = new Map((catalog.cfg.categories || []).map((item) => [item.slug, item.id]));
   const grid = document.getElementById("catgrid");
   const categorySection = grid?.closest("section");
   if (categorySection) categorySection.hidden = catalog.cats.length === 0;
@@ -103,10 +84,9 @@ function fillHome(catalog) {
     const featuredCategories = catalog.cats.slice(0, 6);
     grid.dataset.n = String(featuredCategories.length);
     grid.innerHTML = featuredCategories.map((category) => {
-      const art = CATEGORY_ART[ids.get(category.slug)];
-      return `<a class="cat digini-cat" href="shop.html?cat=${encodeURIComponent(category.slug)}">
-        <span class="digini-cat__art"><img src="${art ? `assets/categories/${art}` : category.image}" alt="${esc(category.name)}" loading="lazy" width="500" height="500"></span>
-        <span class="digini-cat__copy"><b>${esc(category.name)}</b><small>${category.count} products</small></span>
+      return `<a class="cat homex-cat" href="shop.html?cat=${encodeURIComponent(category.slug)}">
+        <span class="homex-cat__art"><img src="${category.image}" alt="${esc(category.name)}" loading="lazy" width="500" height="500"></span>
+        <span class="homex-cat__copy"><b>${esc(category.name)}</b><small>${category.count} products</small></span>
       </a>`;
     }).join("");
   }
@@ -118,7 +98,11 @@ function fillHome(catalog) {
   const arrivals = document.getElementById("arrivals");
   if (arrivals) {
     const newest = [...catalog.products]
-      .sort((a, b) => String(b.raw.created_at || "").localeCompare(String(a.raw.created_at || "")) || b.id - a.id)
+      .sort((a, b) => {
+        const tags = (product) => String(product.raw?.tags || "").toLowerCase();
+        const featured = (product) => tags(product).includes("trending") || tags(product).includes("best seller");
+        return Number(featured(b)) - Number(featured(a)) || String(b.raw.created_at || "").localeCompare(String(a.raw.created_at || "")) || b.id - a.id;
+      })
       .slice(0, 10);
     arrivals.innerHTML = newest.map(cardHTML).join("");
   }
@@ -158,14 +142,14 @@ function renderHomeReviews(products) {
   grid.innerHTML = summary.reviews.slice(0, 3).map((review) => {
     const rating = Math.max(1, Math.min(5, Math.round(review.rating || 0)));
     const label = `${rating} out of 5 stars`;
-    const initials = String(review.name || "Digini customer")
+    const initials = String(review.name || "Homex customer")
       .split(/\s+/).filter(Boolean).slice(0, 2).map((part) => part[0]).join("").toUpperCase();
-    const body = review.body || `Customer rating for ${review.name || "a Digini product"}.`;
+    const body = review.body || `Customer rating for ${review.name || "a Homex product"}.`;
     const meta = [summary.sample ? "Sample review" : "Live product rating", review.city].filter(Boolean).join(" · ");
     return `<article class="home-review-card">
       <div class="home-review-card__top"><span class="home-review-quote" aria-hidden="true">“</span><span class="review-stars" role="img" aria-label="${label}">${"★".repeat(rating)}${"☆".repeat(5 - rating)}</span></div>
       <p>${esc(body)}</p>
-      <footer><span class="home-review-avatar" aria-hidden="true">${esc(initials || "DC")}</span><span><b>${esc(review.name || "Digini customer")}</b><small>${esc(meta)}</small></span></footer>
+      <footer><span class="home-review-avatar" aria-hidden="true">${esc(initials || "HC")}</span><span><b>${esc(review.name || "Homex customer")}</b><small>${esc(meta)}</small></span></footer>
     </article>`;
   }).join("");
 }

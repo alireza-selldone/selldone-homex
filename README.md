@@ -17,6 +17,8 @@ The storefront is an original Homex design. Memoky supplied the main information
 
 The three editorial campaign images in `storefront/assets/homex/` were generated specifically for Homex and compressed as WebP. Every file is below 500 KB.
 
+Live Selldone XAPI is the primary catalog source. [`catalog-snapshot.js`](storefront/catalog-snapshot.js) is a versioned resilience fallback from the same shop and is used only when XAPI is unavailable or returns an application error.
+
 ## Run locally
 
 ```bash
@@ -41,6 +43,8 @@ node scripts/audit-run.mjs http://localhost:8788
 ```
 
 The checks cover identity leakage, distinct content routes, valid anchors, deliberately unfilled merchant facts, interactive controls, responsive hero geometry, template portability, image containment, accessibility, typography, overflow, and network failures.
+
+The completed results and production evidence are in [`docs/acceptance-report.md`](docs/acceptance-report.md) and [`docs/pack/`](docs/pack/).
 
 ## Configuration
 

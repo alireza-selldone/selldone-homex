@@ -9,7 +9,7 @@ An original, responsive furniture storefront for the Selldone shop **Homex** (sh
 - 20 products tagged `trending`
 - 20 different products tagged `Best seller`
 - 6 published furniture journal articles with rectangular cover images
-- Category and primary product images use transparent, optimized assets; category cards reserve 69% of their height for media and render the subject at 70% of that media box
+- Category and primary product images use transparent, optimized assets; category, listing, and product-detail stages render each subject at 70% with `object-fit: contain`
 
 ## Design
 
@@ -50,7 +50,7 @@ Contact, address, company-registration, and opening-hours fields are intentional
 
 ## Deployment
 
-The static build is written to `dist/`. `wrangler.toml` is configured for the `selldone-homex` Worker and the preferred custom domain `homex.selldone.shop`. Deployment URLs and the public PKCE client id are added only after the production Worker exists, so callback URLs are exact rather than guessed.
+The static build is written to `dist/`. [`wrangler.jsonc`](wrangler.jsonc) configures the `selldone-homex` Worker, its `workers.dev` address, and the custom domain [`homex.selldone.shop`](https://homex.selldone.shop/). GitHub pushes to `main` trigger Cloudflare Workers Builds. Browser login uses a shop-bound public Authorization Code + PKCE client; there is no client secret in the repository or browser bundle.
 
 ## Safety note
 

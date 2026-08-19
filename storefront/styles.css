@@ -58,7 +58,7 @@
   --tap:44px;
 }
 
-/* ========================================================================== 
+/* ==========================================================================
    HOMEX — warm editorial furniture system
    The information rhythm is inspired by premium furniture retail, while all
    identity, artwork, copy, spacing, and components are original to Homex.
@@ -1783,7 +1783,7 @@ h1,h2,h3,.h1,.h2,.h3,.h-hero{font-family:var(--display);font-weight:700;letter-s
 .homex-cat{height:294px!important;padding:0!important;display:flex!important;flex-direction:column;background:#fff!important;border:1px solid var(--rule);border-radius:12px;overflow:hidden;box-shadow:0 3px 14px rgba(16,24,40,.045);transition:transform .25s ease,box-shadow .25s ease,border-color .25s ease;}
 .homex-cat:hover{color:var(--graphite)!important;transform:translateY(-4px);border-color:#B2CCFF;box-shadow:0 14px 28px rgba(16,24,40,.1);}
 .homex-cat__art{height:69%;display:flex;align-items:center;justify-content:center;padding:16px 22px;background:transparent;}
-.homex-cat__art img{width:100%!important;height:100%!important;object-fit:contain!important;margin:0!important;background:transparent!important;}
+.homex-cat__art img{width:70%!important;height:70%!important;max-width:70%!important;max-height:70%!important;object-fit:contain!important;margin:auto!important;background:transparent!important;}
 .homex-cat__copy{height:31%;padding:14px 16px;display:flex;flex-direction:column;justify-content:center;border-top:1px solid var(--rule);}
 .homex-cat__copy b{font-family:var(--body);font-size:16px;font-weight:700;margin:0 0 4px;}
 .homex-cat__copy small{color:var(--mist-text);font-size:12px;}
@@ -1949,6 +1949,28 @@ h1,h2,h3,.h1,.h2,.h3,.h-hero{font-family:var(--display);font-weight:700;letter-s
 .related-track .pcard__name{font-size:13.5px;}
 .related-track .pcard .price{font-size:13px;}
 .related-track .eyebrow{font-size:8.5px;}
+
+/* The merchant brief requires transparent product subjects to occupy exactly
+   70% of the available image stage. Keep this final so legacy responsive rules
+   cannot enlarge the cutouts on cards or product pages. */
+.pcard__art img{
+  left:15%!important;
+  top:15%!important;
+  width:70%!important;
+  height:70%!important;
+  max-width:70%!important;
+  max-height:70%!important;
+  object-fit:contain!important;
+}
+.galmain img{
+  left:15%!important;
+  top:15%!important;
+  width:70%!important;
+  height:70%!important;
+  max-width:70%!important;
+  max-height:70%!important;
+  object-fit:contain!important;
+}
 
 @media (max-width:1120px){
   .homex-header .hdr__in{grid-template-columns:auto auto minmax(0,1fr);gap:12px;}

@@ -696,7 +696,6 @@ document.addEventListener("DOMContentLoaded", async () => {
   // banner shifts the page, and shifting it after the reader has started is
   // worse than a few milliseconds of delay.
   await initTemplateBanner();
-  initThemePicker();
   fillBrandCopy();
   initHeader();
   initRail();

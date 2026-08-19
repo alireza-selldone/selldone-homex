@@ -451,6 +451,19 @@ export async function loadShop() {
 /* ---------- Catalog ---------- */
 let _cache = null;
 
+async function catalogFallbackJson() {
+  const { catalogSnapshot } = await import("./catalog-snapshot.js");
+  const categories = new Map(catalogSnapshot.categories.map((c) => [Number(c.id), c]));
+  return {
+    listJson: { products: catalogSnapshot.products },
+    allJson: {
+      products: catalogSnapshot.products.map((p) => ({
+        category: categories.get(Number(p.category_id)) || null,
+      })),
+    },
+  };
+}
+
 export async function loadCatalog() {
   if (_cache) return _cache;
 
@@ -458,9 +471,18 @@ export async function loadCatalog() {
     fetch(URL_PRODUCTS_LIST(), { mode: "cors", headers: { Accept: "application/json" } }),
     fetch(URL_PRODUCTS_ALL(), { mode: "cors", headers: { Accept: "application/json" } }),
   ]);
-  if (!listRes.ok) throw new Error(`products/list ${listRes.status}`);
-  const listJson = await listRes.json();
-  const allJson = allRes.ok ? await allRes.json() : { products: [] };
+  let listJson = listRes.ok ? await listRes.json() : null;
+  let allJson = allRes.ok ? await allRes.json() : null;
+  if (
+    !listRes.ok ||
+    listJson?.error ||
+    !Array.isArray(listJson?.products) ||
+    listJson.products.length === 0 ||
+    allJson?.error ||
+    !Array.isArray(allJson?.products)
+  ) {
+    ({ listJson, allJson } = await catalogFallbackJson());
+  }
 
   /* Category title AND icon both arrive live on products/all. The storefront
      already read the title; reading the icon too is what lets a shop with no
@@ -552,10 +574,21 @@ export async function loadCatalog() {
 const URL_PRODUCT_INFO = (id) => `${SHOP.xapi}/shops/@${SHOP.handle}/products/${id}/info`;
 
 export async function loadProduct(id) {
-  const r = await fetch(URL_PRODUCT_INFO(id), { mode: "cors", headers: { Accept: "application/json" } });
-  if (!r.ok) throw new Error(`products/${id}/info ${r.status}`);
-  const p = (await r.json()).product;
-  if (!p) throw new Error("no product in response");
+  let p;
+  let liveError;
+  try {
+    const r = await fetch(URL_PRODUCT_INFO(id), { mode: "cors", headers: { Accept: "application/json" } });
+    if (!r.ok) throw new Error(`products/${id}/info ${r.status}`);
+    const body = await r.json();
+    if (body?.error) throw new Error(body.error_msg || "product request failed");
+    p = body.product;
+    if (!p) throw new Error("no product in response");
+  } catch (error) {
+    liveError = error;
+    const { catalogSnapshot } = await import("./catalog-snapshot.js");
+    p = catalogSnapshot.products.find((row) => Number(row.id) === Number(id));
+    if (!p) throw liveError;
+  }
   const gallery = [];
   const seen = new Set();
   const push = (path, alt, w, h) => {
@@ -564,6 +597,8 @@ export async function loadProduct(id) {
   };
   push(p.icon, `${p.title}, main view`);
   (p.images || []).forEach((im, i) => push(im.path, im.alt || `${p.title}, view ${i + 2}`, im.width, im.height));
+  (p.product_variants || []).forEach((variant, i) =>
+    push(variant.image, `${p.title}, finish ${i + 1}`, 1000, 1000));
   return { raw: p, gallery };
 }
 

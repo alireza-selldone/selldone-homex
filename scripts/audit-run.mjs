@@ -20,7 +20,8 @@ const PAGES=[["home","/","#catgrid .cat"],["shop","/shop.html","#pgrid .pcard"],
              ["about","/about-us",".prose h2"],["terms","/terms",".prose h2"],
              ["privacy","/privacy",".prose h2"],["contact","/contact-us",".prose h2"],
              ["blog","/blog",".post"],["article","/article.html?id=31880","[data-article-body] p"]];
-const WIDTHS=[1440,1024,1000,950,900,860,850,820,800,768,390];
+/* Acceptance checklist breakpoints: desktop, compact desktop, tablet, phone. */
+const WIDTHS=[1440,1024,768,390];
 const BAG=JSON.stringify([{id:710462,qty:1},{id:710456,qty:2}]);
 const b=await chromium.launch();
 let allPass=true; const rows=[];

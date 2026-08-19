@@ -1972,6 +1972,17 @@ h1,h2,h3,.h1,.h2,.h3,.h-hero{font-family:var(--display);font-weight:700;letter-s
   object-fit:contain!important;
 }
 
+/* Acceptance pass: compact navigation still keeps a 44px activation area,
+   and text colours clear WCAG AA against their actual section surfaces. */
+.header-nav a{min-width:44px;min-height:44px;display:inline-flex;align-items:center;justify-content:center;}
+.ft ul a{min-width:44px;min-height:44px!important;display:inline-flex;align-items:center;}
+.shop input[type="number"]{min-width:75px;min-height:44px;}
+.header-search{color:#505862;}
+.benefit-bar span{color:#59616b;}
+.section-heading .eyebrow,.section-heading .text-link{color:#0047a8;}
+.pcard__badge{background:#365f51;color:#fff;}
+.guide-section .section-heading .eyebrow{color:#d9e6f8!important;}
+
 @media (max-width:1120px){
   .homex-header .hdr__in{grid-template-columns:auto auto minmax(0,1fr);gap:12px;}
   .homex-header .header-nav{display:none;}

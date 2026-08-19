@@ -215,7 +215,8 @@ export async function loadArticle({ blogId, slug }) {
   const local = HOMEX_JOURNAL.find((p) => (blogId && p.blogId === Number(blogId)) || (slug && p.slug === slug));
   let id = blogId;
   if (!id && slug) {
-    const listing = await asJson(URL_BLOGS("?limit=100"));
+    const listing = await asJson(URL_BLOGS("?limit=100")).catch(() => null);
+    if (!listing) return local ? { ...local, categoryId: local.category.id, author: "Homex" } : null;
     id = (listing.articles || []).find((a) => a.slug === slug)?.parent_id;
     if (!id) return local ? { ...local, categoryId: local.category.id, author: "Homex" } : null;
   }

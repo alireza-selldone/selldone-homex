@@ -48,7 +48,7 @@
             <button class="iconbtn" type="button" data-open="cart" aria-label="Open bag, 0 items"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 8h12l-1 12H7L6 8Z"/><path d="M9 8V6a3 3 0 0 1 6 0v2"/></svg><span class="cartdot" data-cart-count hidden>0</span></button>
           </div>
         </div>
-        <div class="homex-navrow homex-navrow"><div class="wrap"><nav class="nav" aria-label="Main"><a href="shop.html"><b>Furniture</b></a><a href="shop.html?cat=sofa-bed">Living</a><a href="shop.html?cat=dining-table">Dining</a><a href="shop.html?cat=beds">Bedroom</a><a href="shop.html?cat=office-tables">Office</a><a href="shop.html?cat=home-decor">Decor</a><a href="/blog">Journal</a></nav><div class="mega"><div class="mega__grid" id="megagrid"></div></div></div></div>
+        <div class="homex-navrow homex-navrow"><div class="wrap"><nav class="nav" aria-label="Main"><a href="shop.html?view=furniture"><b>Furniture</b></a><a href="shop.html?cat=sofa-bed">Living</a><a href="shop.html?cat=dining-table">Dining</a><a href="shop.html?cat=beds">Bedroom</a><a href="shop.html?cat=office-tables">Office</a><a href="shop.html?cat=home-decor">Decor</a><a href="/blog">Journal</a></nav><div class="mega"><div class="mega__grid" id="megagrid"></div></div></div></div>
       </header>
 
       <main id="main" tabindex="-1">
@@ -75,19 +75,32 @@
 
         <section class="section products-section products-section--best" aria-labelledby="best-seller-title"><div class="wrap"><div class="section-heading"><div><p class="eyebrow eyebrow--blued">Best sellers</p><h2 id="best-seller-title">Furniture customers come back for.</h2></div><a class="text-link" href="shop.html" data-all-refs>All products →</a></div><div class="scroller" id="best-seller-products" aria-label="Best seller products"><span class="sr" role="status">Loading best sellers</span></div></div></section>
 
-        <section class="section guide-section"><div class="wrap"><div class="section-heading"><div><p class="eyebrow eyebrow--blued">The Homex journal</p><h2>Ideas for rooms that feel like you.</h2></div><a class="text-link" href="/blog">Read all six stories →</a></div><div class="guide-grid">
+        <section class="section guide-section"><div class="wrap"><div class="section-heading"><div><p class="eyebrow eyebrow--blued">The Homex journal</p><h2>Ideas for rooms that feel like you.</h2></div><a class="text-link" href="/blog" data-home-journal-count>Read all stories →</a></div><div class="guide-grid" data-home-journal-grid>
           <a class="guide-card" href="/blog"><img src="assets/homex/living-editorial.webp" alt="Warm contemporary living room" loading="lazy" width="1536" height="1024" /><span><small>Living room</small><b>How to Layer Natural Materials Without Losing Calm</b><em>Read the journal →</em></span></a>
           <a class="guide-card" href="/blog"><img src="assets/homex/hero-dining.webp" alt="Oak dining table in a sunlit room" loading="lazy" width="1680" height="945" /><span><small>Dining</small><b>Choosing a Table for Everyday Life and Long Gatherings</b><em>Read the journal →</em></span></a>
           <a class="guide-card" href="/blog"><img src="assets/homex/bedroom-editorial.webp" alt="Serene bedroom and writing desk" loading="lazy" width="1536" height="1024" /><span><small>Bedroom</small><b>A Softer Bedroom: Light, Texture, and Useful Storage</b><em>Read the journal →</em></span></a>
         </div></div></section>
 
-        <section class="home-reviews ink" aria-labelledby="homeReviewsTitle"><div class="wrap">
-          <div class="home-reviews__header">
-            <div class="home-reviews__intro"><p class="eyebrow eyebrow--onink" data-home-review-mode>Customer notes</p><h2 id="homeReviewsTitle">A home comes together one good piece at a time.</h2><p>Clear details, thoughtful materials, and furniture selected for everyday use.</p></div>
-            <div class="home-review-overview" aria-label="Review score summary"><div class="home-review-score"><strong data-home-review-average>—</strong><span class="review-stars" aria-hidden="true">★★★★★</span><small data-home-review-count>Loading reviews</small></div><div class="home-rating-breakdown" data-home-review-breakdown aria-label="Rating distribution"></div></div>
+        <section class="home-reviews" aria-labelledby="homeReviewsTitle"><div class="wrap home-reviews__layout">
+          <aside class="home-reviews__summary" aria-label="Review score summary">
+            <p class="eyebrow" data-home-review-mode>Stories from home</p>
+            <h2 id="homeReviewsTitle">Stories<br>from home</h2>
+            <div class="home-review-score"><strong data-home-review-average>—</strong><span class="review-stars" aria-hidden="true">★★★★★</span><small data-home-review-count>Loading reviews</small></div>
+            <div class="home-rating-breakdown" data-home-review-breakdown aria-label="Rating distribution"></div>
+          </aside>
+          <div class="home-review-carousel" data-home-review-carousel aria-roledescription="carousel" aria-label="Customer review stories">
+            <button class="home-review-arrow home-review-arrow--prev" type="button" data-review-prev aria-label="Previous reviews">←</button>
+            <div class="home-review-viewport" data-home-review-viewport>
+              <div class="home-reviews__track" data-home-reviews aria-live="off"><span class="sr" role="status">Loading review highlights</span></div>
+            </div>
+            <button class="home-review-arrow home-review-arrow--next" type="button" data-review-next aria-label="Next reviews">→</button>
+            <div class="home-review-controls">
+              <div class="home-review-dots" data-review-dots role="group" aria-label="Choose review slide"></div>
+              <span class="home-review-progress" aria-hidden="true"><i data-review-progress></i></span>
+              <button class="home-review-toggle" type="button" data-review-toggle aria-label="Pause review autoplay"><span aria-hidden="true">Ⅱ</span><b>Pause</b></button>
+            </div>
+            <p class="home-reviews__disclosure" data-home-review-disclosure></p>
           </div>
-          <div class="home-reviews__grid" data-home-reviews><span class="sr" role="status">Loading review highlights</span></div>
-          <p class="home-reviews__disclosure" data-home-review-disclosure></p>
         </div></section>
 
       </main>

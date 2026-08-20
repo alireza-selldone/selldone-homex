@@ -7,7 +7,7 @@ import {
   subscribe, loadOrders,
 } from "./shop-data.js";
 import { storefrontAuth } from "../shared/auth-client.js";
-import { shopConfig, isUnconfigured } from "./shop-config.js";
+import { shopConfig, isUnconfigured, furnitureNavigation } from "./shop-config.js";
 
 let CAT = null;
 
@@ -29,7 +29,7 @@ const SHARED_HEADER_HTML = `<header class="hdr homex-header">
       </div>
     </div>
   </div>
-  <div class="homex-navrow homex-navrow"><div class="wrap"><nav class="nav header-nav" aria-label="Main"><a href="shop.html"><b>Furniture</b></a><a href="shop.html?cat=sofa-bed">Living</a><a href="shop.html?cat=dining-table">Dining</a><a href="shop.html?cat=beds">Bedroom</a><a href="shop.html?cat=office-tables">Office</a><a href="shop.html?cat=home-decor">Decor</a><a href="/blog">Journal</a></nav><div class="mega"><div class="mega__grid" id="megagrid"></div></div></div></div>
+  <div class="homex-navrow homex-navrow"><div class="wrap"><nav class="nav header-nav" aria-label="Main"><a href="shop.html?view=furniture"><b>Furniture</b></a><a href="shop.html?cat=sofa-bed">Living</a><a href="shop.html?cat=dining-table">Dining</a><a href="shop.html?cat=beds">Bedroom</a><a href="shop.html?cat=office-tables">Office</a><a href="shop.html?cat=home-decor">Decor</a><a href="/blog">Journal</a></nav><div class="mega"><div class="mega__grid" id="megagrid"></div></div></div></div>
 </header>`;
 
 const SOCIAL_ICONS = `<div class="ft__socials" aria-label="Social media"><a href="https://www.instagram.com/" rel="noopener" aria-label="Instagram"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="4" width="16" height="16" rx="4"/><circle cx="12" cy="12" r="3.5"/><circle cx="17.5" cy="6.5" r="1" class="fill"/></svg></a><a href="https://twitter.com/" rel="noopener" aria-label="Twitter"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 5l14 14M19 5 5 19"/></svg></a><a href="https://www.facebook.com/" rel="noopener" aria-label="Facebook"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14 20v-7h2.5l.4-3H14V8.2c0-.9.3-1.7 1.8-1.7H17V4.2c-.5-.1-1.4-.2-2.4-.2-2.5 0-4.2 1.5-4.2 4.3V10H8v3h2.4v7"/></svg></a><a href="https://www.tiktok.com/" rel="noopener" aria-label="TikTok"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14 4v10.3a4 4 0 1 1-3-3.9"/><path d="M14 4c.4 2.4 1.8 3.8 4 4"/></svg></a></div>`;
@@ -354,6 +354,12 @@ export function initAcc(root = document) {
 
 /* ---------- Mega menu + footer collections ---------- */
 function fillNav() {
+  const furniture = furnitureNavigation(CAT.cfg);
+  const excluded = new Set(furniture.excludeCategories);
+  document.querySelectorAll('a[href="shop.html?view=furniture"]').forEach((link) => {
+    const label = link.querySelector("b");
+    if (label) label.textContent = furniture.title;
+  });
   const mega = document.getElementById("megagrid");
   if (mega) {
     const bySlug = new Map(CAT.cats.map((category) => [category.slug, category]));
@@ -375,7 +381,10 @@ function fillNav() {
   });
 
   document.querySelectorAll("[data-drawer-nav]").forEach((nav) => {
+    const furnitureCategories = new Set(CAT.cats.filter((c) => !excluded.has(c.slug)).map((c) => c.slug));
+    const furnitureCount = CAT.products.filter((product) => furnitureCategories.has(product.cat)).length;
     nav.innerHTML =
+      `<a href="shop.html?view=furniture">${esc(furniture.title)}<small>${furnitureCount} products</small></a>` +
       `<a href="shop.html">View all categories<small>${CAT.cats.length} categories · ${CAT.products.length} products</small></a>` +
       CAT.cats.map((c) =>
         `<a href="shop.html?cat=${c.slug}">${esc(c.name)}<small>${c.count} products · from ${money(c.from)}</small></a>`).join("") +

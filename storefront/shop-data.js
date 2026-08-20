@@ -105,7 +105,13 @@ export function loadReviews(products = []) {
   const rated = products.filter((p) => p.rateCount > 0);
   if (rated.length) {
     const list = rated.map((p) => ({
-      name: p.name, city: "", rating: Math.round(p.rate), body: "", productId: p.id,
+      name: "Verified customers",
+      city: `${p.rateCount} ${p.rateCount === 1 ? "rating" : "ratings"}`,
+      rating: Math.round(p.rate),
+      body: `${p.name} is rated ${Number(p.rate).toFixed(1)} out of 5.`,
+      productId: p.id,
+      productName: p.name,
+      image: p.image,
     }));
     return { ...summariseReviews(list), reviews: list, sample: false };
   }
@@ -164,15 +170,14 @@ function fallbackJournal() {
 /* Categories alone — one request. The article page needs a name for one id and
    should not pull the whole listing to get it. */
 export async function loadBlogCategories() {
-  if (HOMEX_JOURNAL.length) return HOMEX_JOURNAL.map((p) => p.category);
   const extra = await asJson(URL_BLOGS("?extra=true")).catch(() => ({ categories: [] }));
-  return (extra.categories || []).map((c) => ({
+  const live = (extra.categories || []).map((c) => ({
     id: c.id, name: c.category, count: Number(c.articles) || 0,
   }));
+  return live.length ? live : HOMEX_JOURNAL.map((p) => p.category);
 }
 
 export async function loadBlog() {
-  if (HOMEX_JOURNAL.length) return fallbackJournal();
   let listing, extra;
   try {
     [listing, extra] = await Promise.all([
@@ -215,7 +220,6 @@ export async function loadBlog() {
 
 export async function loadArticle({ blogId, slug }) {
   const local = HOMEX_JOURNAL.find((p) => (blogId && p.blogId === Number(blogId)) || (slug && p.slug === slug));
-  if (local) return { ...local, categoryId: local.category.id, author: "Homex" };
   let id = blogId;
   if (!id && slug) {
     const listing = await asJson(URL_BLOGS("?limit=100")).catch(() => null);
@@ -455,8 +459,19 @@ export async function loadShop() {
 /* ---------- Catalog ---------- */
 let _cache = null;
 
-async function catalogFallbackJson() {
+function snapshotMatchesShop(snapshot, activeConfig) {
+  const activeId = Number(activeConfig?.shop?.id || SHOP.id || 0);
+  const activeHandle = String(activeConfig?.shop?.handle || SHOP.handle || "").toLowerCase();
+  const idMatches = activeId > 0 && Number(snapshot.shopId) === activeId;
+  const handleMatches = activeHandle && String(snapshot.shopHandle || "").toLowerCase() === activeHandle;
+  return Boolean(idMatches && handleMatches);
+}
+
+async function catalogFallbackJson(activeConfig) {
   const { catalogSnapshot } = await import("./catalog-snapshot.js");
+  if (!snapshotMatchesShop(catalogSnapshot, activeConfig)) {
+    throw new Error("Catalog snapshot belongs to a different shop");
+  }
   const categories = new Map(catalogSnapshot.categories.map((c) => [Number(c.id), c]));
   return {
     listJson: { products: catalogSnapshot.products },
@@ -473,8 +488,9 @@ async function catalogFallbackJson() {
    is synced from the connected shop database and preserves those tags. Merge
    only that missing field onto otherwise-live XAPI products so merchandising
    remains driven by Survey tags instead of a hand-maintained product-id list. */
-async function catalogSurveyTags() {
+async function catalogSurveyTags(activeConfig) {
   const { catalogSnapshot } = await import("./catalog-snapshot.js");
+  if (!snapshotMatchesShop(catalogSnapshot, activeConfig)) return new Map();
   return new Map(catalogSnapshot.products.map((product) => [
     Number(product.id),
     Array.isArray(product.tags) ? product.tags : null,
@@ -484,21 +500,26 @@ async function catalogSurveyTags() {
 export async function loadCatalog() {
   if (_cache) return _cache;
 
-  const [listRes, allRes] = await Promise.all([
-    fetch(URL_PRODUCTS_LIST(), { mode: "cors", headers: { Accept: "application/json" } }),
-    fetch(URL_PRODUCTS_ALL(), { mode: "cors", headers: { Accept: "application/json" } }),
-  ]);
-  let listJson = listRes.ok ? await listRes.json() : null;
-  let allJson = allRes.ok ? await allRes.json() : null;
-  if (
-    !listRes.ok ||
-    listJson?.error ||
-    !Array.isArray(listJson?.products) ||
-    listJson.products.length === 0 ||
-    allJson?.error ||
-    !Array.isArray(allJson?.products)
-  ) {
-    ({ listJson, allJson } = await catalogFallbackJson());
+  const activeConfig = await shopConfig();
+  let listJson;
+  let allJson;
+  try {
+    const [listRes, allRes] = await Promise.all([
+      fetch(URL_PRODUCTS_LIST(), { mode: "cors", headers: { Accept: "application/json" } }),
+      fetch(URL_PRODUCTS_ALL(), { mode: "cors", headers: { Accept: "application/json" } }),
+    ]);
+    listJson = listRes.ok ? await listRes.json() : null;
+    allJson = allRes.ok ? await allRes.json() : null;
+    if (
+      !listRes.ok ||
+      listJson?.error ||
+      !Array.isArray(listJson?.products) ||
+      listJson.products.length === 0 ||
+      allJson?.error ||
+      !Array.isArray(allJson?.products)
+    ) throw new Error("Live catalog is unavailable");
+  } catch {
+    ({ listJson, allJson } = await catalogFallbackJson(activeConfig));
   }
 
   /* Category title AND icon both arrive live on products/all. The storefront
@@ -510,7 +531,8 @@ export async function loadCatalog() {
     if (c && c.id && !catMeta.has(c.id)) catMeta.set(c.id, { title: c.title, icon: c.icon });
   });
 
-  const [cfg, surveyTags] = await Promise.all([shopConfig(), catalogSurveyTags()]);
+  const cfg = activeConfig;
+  const surveyTags = await catalogSurveyTags(activeConfig);
   const index = categoryIndex(cfg, catMeta);
 
   const products = (listJson.products || []).map((p) => {
@@ -606,6 +628,8 @@ export async function loadProduct(id) {
   } catch (error) {
     liveError = error;
     const { catalogSnapshot } = await import("./catalog-snapshot.js");
+    const activeConfig = await shopConfig();
+    if (!snapshotMatchesShop(catalogSnapshot, activeConfig)) throw liveError;
     p = catalogSnapshot.products.find((row) => Number(row.id) === Number(id));
     if (!p) throw liveError;
   }

@@ -343,22 +343,6 @@ h1,h2,h3{margin:0;font-weight:400;}
 .ink .logo span{color:var(--blued-lift);}
 .ft .logo{font-size:26px;}
 
-/* Chapter-ring divider: minute markers, five-minute markers taller.
-   This is a real index, not decoration — it measures the page. */
-.tickrule{
-  height:14px;width:100%;
-  background-image:
-    repeating-linear-gradient(to right,var(--mist) 0 1px,transparent 1px 60px),
-    repeating-linear-gradient(to right,var(--rule) 0 1px,transparent 1px 12px);
-  background-size:100% 14px,100% 6px;
-  background-repeat:repeat-x;background-position:0 0,0 0;
-}
-.ink .tickrule{
-  background-image:
-    repeating-linear-gradient(to right,var(--slate) 0 1px,transparent 1px 60px),
-    repeating-linear-gradient(to right,var(--rule-dark) 0 1px,transparent 1px 12px);
-}
-
 /* ---------- Signature: the index rail ----------
    A fixed chapter ring down the left edge that doubles as scroll progress. */
 .rail{

@@ -45,6 +45,17 @@ const SAMPLE_REVIEWS = [
 ];
 
 function ratingBlock(p) {
+  if (p.rateCount > 0) {
+    const score = Number(p.rate).toFixed(1);
+    const rating = Math.max(1, Math.min(5, Math.round(p.rate)));
+    return `<div class="reviews-block">
+      <div class="reviews-summary">
+        <div><p class="eyebrow eyebrow--onink">Customer ratings</p><h2>What customers rate</h2></div>
+        <div class="reviews-score"><strong>${score}</strong><span class="review-stars" role="img" aria-label="${score} out of 5 stars">${"★".repeat(rating)}${"☆".repeat(5 - rating)}</span><small>${p.rateCount} ${p.rateCount === 1 ? "live rating" : "live ratings"}</small></div>
+      </div>
+      <p class="reviews-disclosure">Score and count are loaded from this store's live product data.</p>
+    </div>`;
+  }
   return `<div class="reviews-block">
     <div class="reviews-summary">
       <div><p class="eyebrow eyebrow--onink">Customer reviews</p><h2>What customers say</h2></div>

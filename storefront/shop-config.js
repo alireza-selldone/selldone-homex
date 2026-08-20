@@ -18,6 +18,7 @@ const EMPTY = {
   shop: {},
   isTemplate: true,
   brand: {},
+  navigation: { furniture: { title: "Furniture", excludeCategories: [] } },
   categories: [],
   categoryHeroes: {},
   hero: { mode: "plate", slides: [], hotspots: [] },
@@ -55,6 +56,19 @@ export async function shopConfig() {
    names it — and an operator who deleted the value believes they unset it. */
 export function isUnconfigured(cfg = shopConfigSync()) {
   return cfg.isTemplate === true || !cfg.shop || !cfg.shop.id;
+}
+
+/* Store-specific collection views belong in shop.config.json. A fresh clone
+   starts with no exclusions, so category slugs from the Homex demonstration
+   can never hide a different merchant's products. */
+export function furnitureNavigation(cfg = shopConfigSync()) {
+  const view = cfg.navigation?.furniture || EMPTY.navigation.furniture;
+  return {
+    title: String(view.title || "Furniture"),
+    excludeCategories: Array.isArray(view.excludeCategories)
+      ? view.excludeCategories.map((slug) => String(slug))
+      : [],
+  };
 }
 
 /* A category slug, derived from its live title. Never from a stored map of

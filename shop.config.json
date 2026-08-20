@@ -18,6 +18,16 @@
     "announcement": "Complimentary delivery on selected pieces · Secure checkout · Thoughtful design guides",
     "announcementShort": "Selected delivery included · Secure checkout"
   },
+  "navigation": {
+    "furniture": {
+      "title": "Furniture",
+      "excludeCategories": [
+        "home-decor",
+        "rugs",
+        "lighting"
+      ]
+    }
+  },
   "categories": [
     {
       "id": 108733,

@@ -173,8 +173,6 @@ for (const [slug, [eyebrow, desc]] of Object.entries(PAGES)) {
           </div>
         </section>
 
-        <div class="wrap"><div class="tickrule"></div></div>
-
         <section class="section">
           <div class="wrap">
             <article class="prose">

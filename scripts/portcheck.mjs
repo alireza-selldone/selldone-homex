@@ -191,6 +191,41 @@ console.log("-".repeat(66));
     : fail(`${r.hotspots} hotspots rendered over a hero this shop has no photograph for`);
 }
 
+console.log("\nSNAPSHOT IS SHOP-SCOPED");
+console.log("-".repeat(66));
+{
+  const ctx = await browser.newContext({ viewport: { width: 1440, height: 900 } });
+  await ctx.route(/shop\.config\.json/, (route) => route.fulfill({
+    status: 200,
+    contentType: "application/json",
+    body: JSON.stringify(REAL_CFG),
+  }));
+  await ctx.route(/xapi\.selldone\.com\/.*products\/(list|all)/, (route) => route.fulfill({
+    status: 503,
+    contentType: "application/json",
+    body: JSON.stringify({ error: true }),
+  }));
+  await ctx.route(/xapi\.selldone\.com\/.*\/(info|blogs)/, (route) => route.fulfill({
+    status: 200,
+    contentType: "application/json",
+    body: JSON.stringify({ shop: {}, articles: [], categories: [] }),
+  }));
+  const page = await ctx.newPage();
+  await page.goto(BASE + "/", { waitUntil: "domcontentloaded" });
+  await page.waitForFunction(() => {
+    const message = document.querySelector("[data-catalog-error]");
+    return message && !message.hidden;
+  });
+  const guarded = await page.evaluate(() => ({
+    products: document.querySelectorAll("[data-product-id]").length,
+    error: document.querySelector("[data-catalog-error]")?.textContent.trim() || "",
+  }));
+  (guarded.products === 0 && guarded.error)
+    ? pass("a different shop never receives Homex snapshot products when its live API is unavailable")
+    : fail(`foreign snapshot leaked: ${JSON.stringify(guarded)}`);
+  await ctx.close();
+}
+
 await browser.close();
 console.log("");
 console.log(fails ? `${fails} FAILURE(S)\n` : "Portability checks passed.\n");

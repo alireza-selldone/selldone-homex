@@ -3,6 +3,8 @@
    public catalog endpoint is unavailable or returns an application error. */
 export const catalogSnapshot = {
   "generatedAt": "2026-08-19T22:57:00Z",
+  "shopId": 15574,
+  "shopHandle": "homex",
   "products": [
     {
       "id": 710450,

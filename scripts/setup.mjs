@@ -250,6 +250,9 @@ async function main() {
     brand: sameShop
       ? prior.brand
       : { foundedYear: null, cities: null, tagline: null, announcement: null },
+    navigation: sameShop
+      ? (prior.navigation || { furniture: { title: "Furniture", excludeCategories: [] } })
+      : { furniture: { title: "Furniture", excludeCategories: [] } },
     categories,
     categoryHeroes,
     hero,

@@ -1,6 +1,9 @@
 import { chromium } from "playwright";
+import { readFile } from "node:fs/promises";
 
 const BASE = (process.argv[2] || "http://localhost:8788").replace(/\/+$/, "");
+const SHOP_CONFIG = JSON.parse(await readFile(new URL("../shop.config.json", import.meta.url), "utf8"));
+const FURNITURE = SHOP_CONFIG.navigation?.furniture || { title: "Furniture", excludeCategories: [] };
 const browser = await chromium.launch();
 let failures = 0;
 const pass = (message) => console.log(`  ok    ${message}`);
@@ -35,6 +38,22 @@ await all.waitForFunction(() => document.querySelectorAll("#pgrid .pcard").lengt
 const allState = await all.evaluate(() => ({ title: document.querySelector("#listtitle")?.textContent.trim(), count: document.querySelector("#count")?.textContent.trim() }));
 allState.title === "All products" && allState.count === "100 products" ? pass("all-products page exposes the full 100-product catalog") : fail(`${allState.title}: ${allState.count}`);
 await all.close();
+
+const furniture = await browser.newPage({ viewport: { width: 1440, height: 1000 } });
+await furniture.goto(`${BASE}/shop.html?view=furniture`, { waitUntil: "domcontentloaded" });
+await furniture.waitForFunction(() => document.querySelectorAll("#pgrid .pcard").length === 24, { timeout: 20000 });
+const furnitureState = await furniture.evaluate(() => ({
+  title: document.querySelector("#listtitle")?.textContent.trim(),
+  crumb: document.querySelector("#crumbtitle")?.textContent.trim(),
+  chip: document.querySelector("#category-chips [aria-current=page]")?.textContent.trim(),
+  count: document.querySelector("#count")?.textContent.trim(),
+  filters: [...document.querySelectorAll("#catfilters input")].map((input) => input.value),
+}));
+const furnitureOnly = !(FURNITURE.excludeCategories || []).some((slug) => furnitureState.filters.includes(slug));
+furnitureState.title === FURNITURE.title && furnitureState.crumb === FURNITURE.title && furnitureState.chip === FURNITURE.title && furnitureOnly
+  ? pass(`${FURNITURE.title} menu opens its configured ${furnitureState.count} view`)
+  : fail(`Furniture view is wrong: ${JSON.stringify(furnitureState)}`);
+await furniture.close();
 
 await browser.close();
 console.log(failures ? `\n${failures} FAILURE(S)\n` : "\nShop checks passed.\n");

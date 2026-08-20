@@ -4,6 +4,7 @@
 
 import { loadCatalog, money, catOf, variantColors } from "./shop-data.js";
 import { cardHTML, esc } from "./app.js";
+import { furnitureNavigation } from "./shop-config.js";
 
 const lg = Math.log10;
 
@@ -25,20 +26,32 @@ function initShop(cat) {
   const params = new URLSearchParams(location.search);
   const presetCat = params.get("cat");
   const presetBrand = params.get("brand");
+  const furnitureView = params.get("view") === "furniture" && !presetCat;
+  const furniture = furnitureNavigation(cat.cfg);
+  const excludedFurnitureCategories = new Set(furniture.excludeCategories);
+  const viewCategories = furnitureView
+    ? cat.cats.filter((category) => !excludedFurnitureCategories.has(category.slug))
+    : cat.cats;
+  const viewCategorySlugs = new Set(viewCategories.map((category) => category.slug));
+  const viewProducts = furnitureView
+    ? cat.products.filter((product) => viewCategorySlugs.has(product.cat))
+    : cat.products;
 
   const chips = document.getElementById("category-chips");
   const activeCategory = cat.cats.find((category) => category.slug === presetCat);
   const chipCategories = (activeCategory
-    ? [activeCategory, ...cat.cats.filter((category) => category.slug !== presetCat)]
-    : cat.cats).slice(0, 8);
+    ? [activeCategory, ...viewCategories.filter((category) => category.slug !== presetCat)]
+    : viewCategories).slice(0, 8);
   if (chips) chips.innerHTML = [
-    ...(presetCat ? [] : [`<a href="shop.html" aria-current="page">All products</a>`]),
+    ...(presetCat ? [] : [furnitureView
+      ? `<a href="shop.html?view=furniture" aria-current="page">${esc(furniture.title)}</a>`
+      : `<a href="shop.html" aria-current="page">All products</a>`]),
     ...chipCategories.map((c) => `<a href="shop.html?cat=${encodeURIComponent(c.slug)}"${presetCat === c.slug ? ' aria-current="page"' : ""}>${esc(c.name)}</a>`),
   ].join("");
 
   /* ---- Filter 1: collection ---- */
   const catBox = document.getElementById("catfilters");
-  catBox.innerHTML = cat.cats.map((c) => `
+  catBox.innerHTML = viewCategories.map((c) => `
     <label class="check">
       <input type="checkbox" value="${c.slug}"${presetCat === c.slug ? " checked" : ""}>
       ${esc(c.name)}<span class="cap">${c.count}</span>
@@ -46,7 +59,10 @@ function initShop(cat) {
 
   /* ---- Filter 4: brand ---- */
   const brandBox = document.getElementById("brandfilters");
-  brandBox.innerHTML = cat.brands.map((b) => `
+  const viewBrands = cat.brands
+    .map((brand) => ({ ...brand, count: viewProducts.filter((product) => product.brand === brand.name).length }))
+    .filter((brand) => brand.count > 0);
+  brandBox.innerHTML = viewBrands.map((b) => `
     <label class="check">
       <input type="checkbox" value="${esc(b.name)}"${presetBrand === b.name ? " checked" : ""}>
       ${esc(b.name)}<span class="cap">${b.count}</span>
@@ -54,7 +70,7 @@ function initShop(cat) {
 
   const colorBox = document.getElementById("colorfilters");
   const colorCounts = new Map();
-  cat.products.forEach((product) => variantColors(product.raw).forEach((color) => {
+  viewProducts.forEach((product) => variantColors(product.raw).forEach((color) => {
     String(color).split("/").forEach((value) => colorCounts.set(value, (colorCounts.get(value) || 0) + 1));
   }));
   const colors = [...colorCounts.entries()].sort((a, b) => b[1] - a[1]).slice(0, 12);
@@ -80,7 +96,9 @@ function initShop(cat) {
   /* ---- Filter 2: price, logarithmic ----
      most references sit in the lower decade against a six-figure ceiling. On a
      linear track they occupy the first eighth and the control is unusable. */
-  const LO = Math.max(cat.lo, 0.01), HI = Math.max(cat.hi, LO);
+  const viewPrices = viewProducts.map((product) => product.price).filter((price) => Number(price) > 0);
+  const LO = Math.max(viewPrices.length ? Math.min(...viewPrices) : cat.lo, 0.01);
+  const HI = Math.max(viewPrices.length ? Math.max(...viewPrices) : cat.hi, LO);
   const span = lg(HI) - lg(LO);
   const clamp = (value, min, max) => Math.min(max, Math.max(min, value));
   const toVal = (pos) => span === 0 ? LO : Math.pow(10, lg(LO) + (Number(pos) / 100) * span);
@@ -136,7 +154,7 @@ function initShop(cat) {
     const { a, b } = paintPrice(syncPriceFields);
     const atFloor = Number(lo.value) === 0, atCeil = Number(hi.value) === 100;
 
-    const list = cat.products.filter((p) =>
+    const list = viewProducts.filter((p) =>
       (!picked.length || picked.includes(p.cat)) &&
       (!brands.length || brands.includes(p.brand)) &&
       (!selectedColors.length || variantColors(p.raw).some((color) => String(color).split("/").some((value) => selectedColors.includes(value)))) &&
@@ -150,13 +168,16 @@ function initShop(cat) {
       String(y.raw.created_at || "").localeCompare(String(x.raw.created_at || "")) || y.id - x.id);
 
     const one = picked.length === 1 ? catOf(cat, picked[0]) : null;
-    title.textContent = one ? one.name : "All products";
-    if (crumbTitle) crumbTitle.textContent = one ? one.name : "Products";
+    const pageName = one ? one.name : furnitureView ? furniture.title : "All products";
+    title.textContent = pageName;
+    if (crumbTitle) crumbTitle.textContent = one ? one.name : furnitureView ? furniture.title : "Products";
     if (intro) intro.textContent = one ? one.blurb
-      : `${cat.products.length} products across ${cat.cats.length} categories.`;
+      : furnitureView
+        ? `${viewProducts.length} furniture products across ${viewCategories.length} categories.`
+        : `${cat.products.length} products across ${cat.cats.length} categories.`;
     count.textContent = `${list.length} ${list.length === 1 ? "product" : "products"}`;
     if (shown > list.length) shown = Math.max(PAGE, Math.ceil(list.length / PAGE) * PAGE);
-    document.title = `${one ? one.name : "All products"} — Homex`;
+    document.title = `${pageName} — Homex`;
 
     if (list.length) {
       const page = list.slice(0, shown);
@@ -171,7 +192,7 @@ function initShop(cat) {
     } else {
       more.hidden = true;
       /* Never a blank page: offer three real references either side of the band. */
-      const near = [...cat.products]
+      const near = [...viewProducts]
         .sort((x, y) => Math.abs(x.price - (a + b) / 2) - Math.abs(y.price - (a + b) / 2))
         .slice(0, 3);
       grid.className = "";

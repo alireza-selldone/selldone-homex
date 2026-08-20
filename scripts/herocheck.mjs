@@ -1,7 +1,12 @@
 /* Verify the responsive Homex campaign hero against its current design rules. */
 import { chromium } from "playwright";
+import { readFile } from "node:fs/promises";
 
 const BASE = (process.argv[2] || "http://localhost:8788").replace(/\/+$/, "");
+const SHOP_CONFIG = JSON.parse(await readFile(new URL("../shop.config.json", import.meta.url), "utf8"));
+const EXPECTED_DOTS = SHOP_CONFIG.hero?.mode === "slides"
+  ? Math.max(1, (SHOP_CONFIG.hero.slides || []).length)
+  : 3;
 const browser = await chromium.launch();
 let failures = 0;
 const fail = (message) => { failures++; console.log(`  FAIL  ${message}`); };
@@ -14,6 +19,7 @@ for (const [width, height] of [[1440, 900], [1024, 900], [820, 1000], [390, 844]
     const image = document.querySelector("[data-hero-img]");
     return image?.complete && image.naturalWidth > 0;
   });
+  await page.waitForFunction((count) => document.querySelectorAll(".campaign-hero__dots button").length === count, EXPECTED_DOTS);
   await page.waitForTimeout(300);
 
   const state = await page.evaluate(() => {
@@ -51,8 +57,8 @@ for (const [width, height] of [[1440, 900], [1024, 900], [820, 1000], [390, 844]
   Math.abs(state.heroCenter.x - state.copyCenter.x) < 2 && Math.abs(state.heroCenter.y - state.copyCenter.y) < 2
     ? pass("title, button and subline are centred on the image") : fail("hero copy is not centred");
   state.actions === 1 ? pass("hero contains one focused action") : fail(`${state.actions} hero actions rendered`);
-  state.dots.length === 3 && state.dots.every((dot) => dot.width <= 10 && dot.height <= 10)
-    ? pass("slider uses three small dots") : fail("slider dots are missing or oversized");
+  state.dots.length === EXPECTED_DOTS && state.dots.every((dot) => dot.width <= 10 && dot.height <= 10)
+    ? pass(`slider uses ${EXPECTED_DOTS} small dots`) : fail("slider dots are missing or oversized");
   await page.close();
 }
 

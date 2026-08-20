@@ -2,7 +2,7 @@
    Ported from design-reference/shop.html + initShop(), extended with the
    brand filter. All data live from XAPI. */
 
-import { loadCatalog, money, catOf } from "./shop-data.js";
+import { loadCatalog, money, catOf, variantColors } from "./shop-data.js";
 import { cardHTML, esc } from "./app.js";
 
 const lg = Math.log10;
@@ -26,6 +26,16 @@ function initShop(cat) {
   const presetCat = params.get("cat");
   const presetBrand = params.get("brand");
 
+  const chips = document.getElementById("category-chips");
+  const activeCategory = cat.cats.find((category) => category.slug === presetCat);
+  const chipCategories = (activeCategory
+    ? [activeCategory, ...cat.cats.filter((category) => category.slug !== presetCat)]
+    : cat.cats).slice(0, 8);
+  if (chips) chips.innerHTML = [
+    ...(presetCat ? [] : [`<a href="shop.html" aria-current="page">All products</a>`]),
+    ...chipCategories.map((c) => `<a href="shop.html?cat=${encodeURIComponent(c.slug)}"${presetCat === c.slug ? ' aria-current="page"' : ""}>${esc(c.name)}</a>`),
+  ].join("");
+
   /* ---- Filter 1: collection ---- */
   const catBox = document.getElementById("catfilters");
   catBox.innerHTML = cat.cats.map((c) => `
@@ -41,6 +51,31 @@ function initShop(cat) {
       <input type="checkbox" value="${esc(b.name)}"${presetBrand === b.name ? " checked" : ""}>
       ${esc(b.name)}<span class="cap">${b.count}</span>
     </label>`).join("");
+
+  const colorBox = document.getElementById("colorfilters");
+  const colorCounts = new Map();
+  cat.products.forEach((product) => variantColors(product.raw).forEach((color) => {
+    String(color).split("/").forEach((value) => colorCounts.set(value, (colorCounts.get(value) || 0) + 1));
+  }));
+  const colors = [...colorCounts.entries()].sort((a, b) => b[1] - a[1]).slice(0, 12);
+  if (colorBox) colorBox.innerHTML = colors.map(([color, total]) => `<label class="check check--color"><input type="checkbox" value="${esc(color)}"><i style="background:${esc(color)}" aria-hidden="true"></i><span>${esc(color)}</span><span class="cap">${total}</span></label>`).join("");
+  const locationBox = document.getElementById("locationfilters");
+
+  document.querySelectorAll(".filters .fgroup").forEach((group, index) => {
+    const heading = group.querySelector(":scope > h4");
+    if (!heading) return;
+    const body = [...group.children].filter((child) => child !== heading);
+    const id = `filter-panel-${index}`;
+    body.forEach((child) => child.classList.add("filter-panel-part"));
+    heading.innerHTML = `<button type="button" aria-expanded="${index === 1 ? "true" : "false"}" aria-controls="${id}"><span>${heading.textContent}</span><i aria-hidden="true">${index === 1 ? "−" : "+"}</i></button>`;
+    group.id = id;
+    group.classList.toggle("is-open", index === 1);
+    heading.querySelector("button")?.addEventListener("click", (event) => {
+      const open = group.classList.toggle("is-open");
+      event.currentTarget.setAttribute("aria-expanded", String(open));
+      event.currentTarget.querySelector("i").textContent = open ? "−" : "+";
+    });
+  });
 
   /* ---- Filter 2: price, logarithmic ----
      most references sit in the lower decade against a six-figure ceiling. On a
@@ -96,12 +131,16 @@ function initShop(cat) {
   function render({ syncPriceFields = true } = {}) {
     const picked = [...catBox.querySelectorAll("input:checked")].map((i) => i.value);
     const brands = [...brandBox.querySelectorAll("input:checked")].map((i) => i.value);
+    const selectedColors = colorBox ? [...colorBox.querySelectorAll("input:checked")].map((i) => i.value) : [];
+    const locations = locationBox ? [...locationBox.querySelectorAll("input:checked")].map((i) => i.value) : [];
     const { a, b } = paintPrice(syncPriceFields);
     const atFloor = Number(lo.value) === 0, atCeil = Number(hi.value) === 100;
 
     const list = cat.products.filter((p) =>
       (!picked.length || picked.includes(p.cat)) &&
       (!brands.length || brands.includes(p.brand)) &&
+      (!selectedColors.length || variantColors(p.raw).some((color) => String(color).split("/").some((value) => selectedColors.includes(value)))) &&
+      (!locations.length || locations.includes(/outdoor/i.test(`${p.name} ${p.cat}`) ? "outdoor" : "indoor")) &&
       (atFloor || p.price >= a) && (atCeil || p.price <= b) &&
       (!stock.checked || p.qty > 0));
 
@@ -197,9 +236,13 @@ function initShop(cat) {
   });
   catBox.addEventListener("change", reset);
   brandBox.addEventListener("change", reset);
+  colorBox?.addEventListener("change", reset);
+  locationBox?.addEventListener("change", reset);
   document.getElementById("clear")?.addEventListener("click", () => {
     catBox.querySelectorAll("input").forEach((i) => (i.checked = false));
     brandBox.querySelectorAll("input").forEach((i) => (i.checked = false));
+    colorBox?.querySelectorAll("input").forEach((i) => (i.checked = false));
+    locationBox?.querySelectorAll("input").forEach((i) => (i.checked = false));
     lo.value = 0; hi.value = 100; stock.checked = false; sort.value = "new";
     render();
   });

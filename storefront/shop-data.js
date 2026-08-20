@@ -468,6 +468,19 @@ async function catalogFallbackJson() {
   };
 }
 
+/* Survey tags are merchant data, but Selldone's public products/list and
+   products/all responses currently omit them. The generated catalog snapshot
+   is synced from the connected shop database and preserves those tags. Merge
+   only that missing field onto otherwise-live XAPI products so merchandising
+   remains driven by Survey tags instead of a hand-maintained product-id list. */
+async function catalogSurveyTags() {
+  const { catalogSnapshot } = await import("./catalog-snapshot.js");
+  return new Map(catalogSnapshot.products.map((product) => [
+    Number(product.id),
+    Array.isArray(product.tags) ? product.tags : null,
+  ]));
+}
+
 export async function loadCatalog() {
   if (_cache) return _cache;
 
@@ -497,10 +510,13 @@ export async function loadCatalog() {
     if (c && c.id && !catMeta.has(c.id)) catMeta.set(c.id, { title: c.title, icon: c.icon });
   });
 
-  const cfg = await shopConfig();
+  const [cfg, surveyTags] = await Promise.all([shopConfig(), catalogSurveyTags()]);
   const index = categoryIndex(cfg, catMeta);
 
   const products = (listJson.products || []).map((p) => {
+    const raw = Array.isArray(p.tags)
+      ? p
+      : { ...p, tags: surveyTags.get(Number(p.id)) || null };
     const slug = index.get(Number(p.category_id))?.slug || "";
     return {
       id: p.id,
@@ -520,7 +536,7 @@ export async function loadCatalog() {
       range: priceRange(p),
       icon: p.icon || "",
       image: img(p.icon),
-      raw: p,
+      raw,
     };
   });
 

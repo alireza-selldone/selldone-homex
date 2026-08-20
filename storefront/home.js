@@ -1,7 +1,7 @@
 /* Homex homepage — live Selldone catalog with an editorial furniture shell. */
 
 import { loadCatalog, loadReviews } from "./shop-data.js";
-import { cardHTML, esc } from "./app.js";
+import { cardHTML, esc, productTags } from "./app.js";
 
 const CAMPAIGNS = [
   {
@@ -76,6 +76,18 @@ function initCampaigns() {
   paint(0);
 }
 
+function initBeforeAfter() {
+  const comparison = document.querySelector("[data-before-after]");
+  const range = comparison?.querySelector("[data-before-after-range]");
+  if (!comparison || !range) return;
+  const paint = () => {
+    comparison.style.setProperty("--split", `${range.value}%`);
+    range.setAttribute("aria-valuetext", `${range.value}% room concept`);
+  };
+  range.addEventListener("input", paint);
+  paint();
+}
+
 function fillHome(catalog) {
   const grid = document.getElementById("catgrid");
   const categorySection = grid?.closest("section");
@@ -95,17 +107,17 @@ function fillHome(catalog) {
     link.textContent = `All ${catalog.products.length} products →`;
   });
 
-  const arrivals = document.getElementById("arrivals");
-  if (arrivals) {
-    const newest = [...catalog.products]
-      .sort((a, b) => {
-        const tags = (product) => String(product.raw?.tags || "").toLowerCase();
-        const featured = (product) => tags(product).includes("trending") || tags(product).includes("best seller");
-        return Number(featured(b)) - Number(featured(a)) || String(b.raw.created_at || "").localeCompare(String(a.raw.created_at || "")) || b.id - a.id;
-      })
-      .slice(0, 10);
-    arrivals.innerHTML = newest.map(cardHTML).join("");
-  }
+  const fillMerchandisingRail = (id, tag) => {
+    const rail = document.getElementById(id);
+    if (!rail) return;
+    const products = catalog.products.filter((product) => productTags(product).includes(tag)).slice(0, 20);
+    rail.dataset.count = String(products.length);
+    rail.innerHTML = products.map(cardHTML).join("");
+    rail.closest("section")?.toggleAttribute("hidden", products.length === 0);
+  };
+
+  fillMerchandisingRail("trending-products", "trending");
+  fillMerchandisingRail("best-seller-products", "best seller");
 
   const categories = catalog.cats.length;
   document.querySelectorAll("[data-category-count]").forEach((el) => { el.textContent = categories; });
@@ -155,6 +167,7 @@ function renderHomeReviews(products) {
 }
 
 initCampaigns();
+initBeforeAfter();
 
 loadCatalog()
   .then(fillHome)

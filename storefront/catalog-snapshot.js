@@ -765,7 +765,7 @@ export const catalogSnapshot = {
         {
           "id": 1403567,
           "sku": "HMX-P-710462-V-1403567",
-          "color": "",
+          "color": "#B9824C/#F0E8DC",
           "image": "https://cdn.selldone.com/app/shops/15574/products/photopng0d538b52436713b0d77eef93d5faf173.png",
           "pricing": false,
           "price": 0,
@@ -777,8 +777,8 @@ export const catalogSnapshot = {
         {
           "id": 1403568,
           "sku": "HMX-P-710462-V-1403568",
-          "color": "",
-          "image": null,
+          "color": "#241F1A/#F0E8DC",
+          "image": "https://cdn.selldone.com/app/shops/15574/products/7104621403568blackivoryalphapngbdb391f92ddac66a624413d6ebbd5ad3.png",
           "pricing": false,
           "price": 0,
           "discount": 0,
@@ -789,8 +789,8 @@ export const catalogSnapshot = {
         {
           "id": 1403569,
           "sku": "HMX-P-710462-V-1403569",
-          "color": "",
-          "image": null,
+          "color": "#7A4A2A/#B65A3C",
+          "image": "https://cdn.selldone.com/app/shops/15574/products/7104621403569walnutrustalphapng1e21b8ffaf2467997fe7969faa09a4d2.png",
           "pricing": false,
           "price": 0,
           "discount": 0,
@@ -1025,7 +1025,7 @@ export const catalogSnapshot = {
         {
           "id": 1403574,
           "sku": "HMX-P-710466-V-1403574",
-          "color": "",
+          "color": "#B9824C/#F0E8DC",
           "image": "https://cdn.selldone.com/app/shops/15574/products/photopng59d862ca4ec523ca645da8fef62fb29e.png",
           "pricing": false,
           "price": 0,
@@ -1037,8 +1037,8 @@ export const catalogSnapshot = {
         {
           "id": 1403575,
           "sku": "HMX-P-710466-V-1403575",
-          "color": "",
-          "image": null,
+          "color": "#24211D/#E8DED1",
+          "image": "https://cdn.selldone.com/app/shops/15574/products/7104661403575blackcreamalphapngba6d4ad741dbdcdcff8dddaf40c17958.png",
           "pricing": false,
           "price": 0,
           "discount": 0,
@@ -1049,8 +1049,8 @@ export const catalogSnapshot = {
         {
           "id": 1403576,
           "sku": "HMX-P-710466-V-1403576",
-          "color": "",
-          "image": null,
+          "color": "#79513A/#8A9A73",
+          "image": "https://cdn.selldone.com/app/shops/15574/products/7104661403576walnutsagealphapng3f16174d33cb57361704b1b3fa204394.png",
           "pricing": false,
           "price": 0,
           "discount": 0,
@@ -1061,8 +1061,8 @@ export const catalogSnapshot = {
         {
           "id": 1403577,
           "sku": "HMX-P-710466-V-1403577",
-          "color": "",
-          "image": null,
+          "color": "#6B5746/#4A4A47",
+          "image": "https://cdn.selldone.com/app/shops/15574/products/7104661403577smokedcharcoalalphapng05e43d73d8966fb28876b38174559ef2.png",
           "pricing": false,
           "price": 0,
           "discount": 0,
@@ -1073,8 +1073,8 @@ export const catalogSnapshot = {
         {
           "id": 1403578,
           "sku": "HMX-P-710466-V-1403578",
-          "color": "",
-          "image": null,
+          "color": "#B9824C/#B65A3C",
+          "image": "https://cdn.selldone.com/app/shops/15574/products/7104661403578oakterracottaalphapng9a5f963453d990236aa69a05f0fc593c.png",
           "pricing": false,
           "price": 0,
           "discount": 0,
@@ -6530,4 +6530,3 @@ export const catalogSnapshot = {
     }
   ]
 };
-

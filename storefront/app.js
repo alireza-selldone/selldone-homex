@@ -32,7 +32,9 @@ const SHARED_HEADER_HTML = `<header class="hdr homex-header">
   <div class="homex-navrow homex-navrow"><div class="wrap"><nav class="nav header-nav" aria-label="Main"><a href="shop.html"><b>Furniture</b></a><a href="shop.html?cat=sofa-bed">Living</a><a href="shop.html?cat=dining-table">Dining</a><a href="shop.html?cat=beds">Bedroom</a><a href="shop.html?cat=office-tables">Office</a><a href="shop.html?cat=home-decor">Decor</a><a href="/blog">Journal</a></nav><div class="mega"><div class="mega__grid" id="megagrid"></div></div></div></div>
 </header>`;
 
-const SHARED_FOOTER_HTML = `<footer class="ft ink homex-footer"><div class="wrap"><div class="ft__cols"><div class="ft__col ft__brand"><p class="logo homex-logo">homex<span>.</span></p><p class="lede" data-brand-tagline>Furniture that makes room for living.</p><div class="ft__socials" aria-label="Social media"><span role="img" aria-label="Instagram"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="4" width="16" height="16" rx="4"/><circle cx="12" cy="12" r="3.5"/><circle cx="17.5" cy="6.5" r="1" class="fill"/></svg></span><span role="img" aria-label="Pinterest"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="8"/><path d="M9.5 18c1-3 1.7-5.2 2.3-8.2.3-1.6 2.8-1.2 2.5.6-.3 2-2.8 2.6-3.7 1.1-1.5-2.6.8-5.1 3.5-4.5 3 .7 3.8 4.3 2.2 6.5-1.4 2-4 2.6-5.9 1.3"/></svg></span><span role="img" aria-label="YouTube"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="6" width="18" height="12" rx="4"/><path d="m10 9 5 3-5 3Z" class="fill"/></svg></span></div></div><div class="ft__col"><h4>Explore</h4><ul data-collections></ul></div><div class="ft__col"><h4>Customer care</h4><ul><li><a href="/about-us">About Homex</a></li><li><a href="/blog">Journal</a></li><li><a href="/terms#delivery">Shipping</a></li><li><a href="/terms#returns">Returns</a></li><li><a href="/contact-us">Contact us</a></li></ul></div><div class="ft__col"><h4>Stay inspired</h4><p class="lede">New furniture, room ideas, and practical design notes.</p><div class="sub"><label class="sr" for="footer-email">Email address</label><input id="footer-email" type="email" placeholder="Email address"/><button type="button">Subscribe</button></div><ul class="ft__policy"><li><a href="/terms">Terms</a></li><li><a href="/privacy">Privacy</a></li></ul></div></div><div class="ft__bar"><span>© 2026 Homex · Designed for everyday rooms</span><span class="ft__payments" aria-label="Accepted payment methods"><span class="ft__payment ft__payment--visa" role="img" aria-label="Visa">VISA</span><span class="ft__payment ft__payment--mastercard" role="img" aria-label="Mastercard"><i></i><i></i></span><span class="ft__payment ft__payment--amex" role="img" aria-label="American Express">AMEX</span></span></div></div></footer>`;
+const SOCIAL_ICONS = `<div class="ft__socials" aria-label="Social media"><a href="https://www.instagram.com/" rel="noopener" aria-label="Instagram"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="4" width="16" height="16" rx="4"/><circle cx="12" cy="12" r="3.5"/><circle cx="17.5" cy="6.5" r="1" class="fill"/></svg></a><a href="https://twitter.com/" rel="noopener" aria-label="Twitter"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 5l14 14M19 5 5 19"/></svg></a><a href="https://www.facebook.com/" rel="noopener" aria-label="Facebook"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14 20v-7h2.5l.4-3H14V8.2c0-.9.3-1.7 1.8-1.7H17V4.2c-.5-.1-1.4-.2-2.4-.2-2.5 0-4.2 1.5-4.2 4.3V10H8v3h2.4v7"/></svg></a><a href="https://www.tiktok.com/" rel="noopener" aria-label="TikTok"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14 4v10.3a4 4 0 1 1-3-3.9"/><path d="M14 4c.4 2.4 1.8 3.8 4 4"/></svg></a></div>`;
+
+const SHARED_FOOTER_HTML = `<footer class="ft homex-footer"><div class="wrap"><div class="ft__cols"><section class="ft__col"><h4>Customer Service</h4><ul><li><a href="/contact-us">Contact Information</a></li><li><a href="/terms#returns">Refund Policy</a></li><li><a href="/terms#delivery">Shipping Policy</a></li><li><a href="/terms">Terms of Service</a></li><li><a href="/privacy">Privacy Policy</a></li></ul></section><section class="ft__col"><h4>About Us</h4><ul><li><a href="/about-us">About Homex</a></li><li><a href="/blog">Journal</a></li><li><button class="ft__link" type="button" data-open="search">Search</button></li></ul></section><section class="ft__col ft__newsletter"><h4>Sign up to our Newsletter</h4><p>Be the first to know about new collections, room ideas, and offers.</p><div class="sub"><label class="sr" for="footer-email">Email address</label><input id="footer-email" type="email" placeholder="Email address"/><button type="button">Subscribe</button></div></section></div><div class="ft__bottom"><div class="ft__commerce">${SOCIAL_ICONS}<div class="ft__payments" aria-label="Accepted payment methods"><span>AMEX</span><span>Apple Pay</span><span>Diners</span><span>Discover</span><span>G Pay</span><span class="ft__mc" aria-label="Mastercard"><i></i><i></i></span><span>PayPal</span><span>Shop</span><span>VISA</span></div></div><p class="ft__copyright">© 2026 Homex. All Rights Reserved.</p><a class="ft__follow" href="https://homex.selldone.shop/" rel="noopener">♡ Follow Homex</a></div></div></footer>`;
 
 const SHARED_OVERLAYS_HTML = `<div class="drawer ink" role="dialog" aria-modal="true" aria-label="Menu" aria-hidden="true"><div class="drawer__top"><span class="eyebrow">Menu</span><button class="xbtn" type="button" data-close>Close</button></div><nav data-drawer-nav aria-label="Mobile"></nav></div>
 <aside class="cart" role="dialog" aria-modal="true" aria-label="Shopping bag" aria-hidden="true"><div class="cart__hd"><span class="eyebrow mb0" data-cart-label>Your bag · 0</span><button class="xbtn" type="button" data-close>Close</button></div><div class="cart__body" data-cart-body></div><div class="cart__ft" data-cart-foot hidden><div class="sum__tot"><span class="eyebrow mb0">Subtotal</span><span class="price" data-cart-total>$0</span></div><a class="btn btn--full" href="checkout.html">Checkout</a><p class="cap center">Taxes and delivery are calculated at checkout.</p></div></aside>
@@ -56,11 +58,16 @@ function initSharedChrome() {
 }
 
 /* ---------- Shared card ---------- */
+export function productTags(p) {
+  return (Array.isArray(p.raw?.tags) ? p.raw.tags : String(p.raw?.tags || "").split(","))
+    .map((tag) => String(tag).trim().toLowerCase().replace(/[_-]+/g, " "))
+    .filter(Boolean);
+}
+
 export function cardHTML(p) {
-  const tags = (Array.isArray(p.raw?.tags) ? p.raw.tags : String(p.raw?.tags || "").split(","))
-    .map((tag) => String(tag).trim().toLowerCase());
+  const tags = productTags(p);
   const badge = tags.includes("trending") ? "Trending" : tags.includes("best seller") ? "Best seller" : "";
-  return `<a class="pcard" href="product.html?id=${p.id}">
+  return `<a class="pcard" href="product.html?id=${p.id}" data-product-id="${p.id}" data-product-tags="${esc(tags.join(","))}">
     <div class="pcard__art">
       ${badge ? `<span class="pcard__badge">${badge}</span>` : ""}
       <img src="${p.image}" alt="${esc(p.name)}" loading="lazy" width="500" height="500">
@@ -263,7 +270,8 @@ function initHeader() {
   document.querySelector('[data-open="nav"]')?.addEventListener("click", () => open(document.querySelector(".drawer")));
   document.querySelector('[data-open="cart"]')?.addEventListener("click", () => open(document.querySelector(".cart")));
   document.querySelector('[data-open="filters"]')?.addEventListener("click", () => open(document.querySelector(".filters")));
-  document.querySelector('[data-open="search"]')?.addEventListener("click", () => open(document.querySelector(".sheet--search")));
+  document.querySelectorAll('[data-open="search"]').forEach((button) =>
+    button.addEventListener("click", () => open(document.querySelector(".sheet--search"))));
   document.querySelector('[data-open="account"]')?.addEventListener("click", () => {
     open(document.querySelector(".sheet--account"));
     renderAccount();   // refetches, so a session that expired while the tab sat open shows as signed out

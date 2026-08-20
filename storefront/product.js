@@ -93,6 +93,13 @@ async function initPDP(cat) {
   /* Every variant the shop defines, not a filtered subset. */
   const variants = variantsOf(p.raw);
   const showSwatches = variants.length >= 2;
+  /* Never paint an empty finish control. A Selldone variant image is preferred;
+     legacy records fall back deterministically to a real gallery frame. */
+  const variantImage = (variant, index) => {
+    if (variant?.image) return img(variant.image);
+    if (gallery.length > 1) return gallery[1 + (index % (gallery.length - 1))].src;
+    return gallery[0].src;
+  };
   /* A variant's own price/stock when it sets one, the product's otherwise. */
   const priceOf = (v) => (v && v.price > 0 ? v.price - (v.discount || 0) : p.price);
   const stockOf = (v) => (v && v.qty ? v.qty : p.qty);
@@ -129,13 +136,12 @@ async function initPDP(cat) {
       <p class="eyebrow mb0" style="margin-bottom:14px">Available finishes</p>
       <div class="swatches" role="radiogroup" aria-label="Available finishes">
         ${variants.map((v, i) => `
-          <button class="sw${v.image ? " sw--img" : ""}${i ? "" : " is-on"}" type="button" role="radio"
+          <button class="sw sw--img${i ? "" : " is-on"}" type="button" role="radio"
                   aria-checked="${i ? "false" : "true"}"
                   data-i="${i}"
-                  ${v.image ? "" : `style="${swatchStyle(v.color)}"`}
                   aria-label="Finish ${i + 1} of ${variants.length}, ${esc(swatchLabel(v.color))}">
-            ${v.image ? `<img src="${esc(img(v.image))}" alt="" width="60" height="60" loading="lazy">
-              <span class="sw__dot" aria-hidden="true" style="${swatchStyle(v.color)}"></span>` : ""}
+            <img src="${esc(variantImage(v, i))}" alt="" width="60" height="60" loading="lazy">
+            ${v.color ? `<span class="sw__dot" aria-hidden="true" style="${swatchStyle(v.color)}"></span>` : ""}
           </button>`).join("")}
       </div>
       <p class="swname mb0">Finish <span class="swhex" data-sw-hex>${esc(variants[0].color)}</span>${variants[0].sku ? ` <span class="swsku" data-sw-sku>${esc(variants[0].sku)}</span>` : `<span class="swsku" data-sw-sku hidden></span>`}</p>
@@ -237,7 +243,7 @@ async function initPDP(cat) {
     if (v?.image) {
       const want = img(v.image);
       const exact = gallery.findIndex((g) => g.src === want);
-      if (exact > 0) return exact;
+      return exact;
     }
     if (gallery.length > 1) return 1 + (variantIndex % (gallery.length - 1));
     return 0;
@@ -271,7 +277,18 @@ async function initPDP(cat) {
         const q = stockOf(v);
         stockEl.innerHTML = `<i class="dot"></i> ${q > 0 ? `${q} in stock` : "Currently unavailable"}`;
       }
-      showGallery(variantGalleryIndexes[i]);
+      const galleryIndex = variantGalleryIndexes[i];
+      if (galleryIndex >= 0) {
+        showGallery(galleryIndex);
+      } else {
+        current = 0;
+        const mainImage = root.querySelector("#galmain img");
+        if (mainImage) {
+          mainImage.src = variantImage(v, i);
+          mainImage.alt = `${p.name}, finish ${i + 1}`;
+        }
+        root.querySelectorAll(".thumb").forEach((thumb) => thumb.classList.remove("is-on"));
+      }
     }));
 
   initAcc(root);

@@ -789,7 +789,7 @@ html.is-locked,html.is-locked body{overflow:hidden;height:100%;}
 .pinfo{position:sticky;top:120px;}
 .pinfo h1{margin:8px 0 10px;}
 .pline{height:1px;background:var(--rule);margin:26px 0;}
-.swatches{display:flex;gap:12px;flex-wrap:wrap;}
+.swatches{display:flex;gap:14px;flex-wrap:wrap;padding:5px 7px 8px 5px;overflow:visible;}
 .sw{width:var(--tap);height:var(--tap);border-radius:50%;border:1px solid var(--rule);position:relative;}
 .sw.is-on{box-shadow:0 0 0 2px var(--dial),0 0 0 3px var(--blued);}
 .swname{font-size:13px;color:var(--slate);margin-top:12px;}
@@ -1544,7 +1544,7 @@ html.js-reveal .reveal.is-in{opacity:1;transform:none;}
 .sw--img.is-on{border-color:var(--blued);box-shadow:0 0 0 2px var(--blued);}
 /* the colour still shows, as a corner dot, so the finish is readable at a glance */
 .sw__dot{
-  position:absolute;right:-3px;bottom:-3px;width:14px;height:14px;border-radius:50%;
+  position:absolute;right:3px;bottom:3px;width:14px;height:14px;border-radius:50%;
   border:2px solid var(--dial-pure);
 }
 .swsku{

@@ -21,6 +21,7 @@ for (const [width, height] of [[1440, 900], [1024, 900], [820, 1000], [390, 844]
     const image = document.querySelector("[data-hero-img]");
     const copy = document.querySelector(".campaign-hero__copy");
     const heading = copy.querySelector("h1");
+    const dots = [...document.querySelectorAll(".campaign-hero__dots button")];
     const hr = hero.getBoundingClientRect();
     const ir = image.getBoundingClientRect();
     const cr = copy.getBoundingClientRect();
@@ -32,6 +33,10 @@ for (const [width, height] of [[1440, 900], [1024, 900], [820, 1000], [390, 844]
       copy: { top: cr.top, bottom: cr.bottom, width: cr.width },
       heading: { top: tr.top, bottom: tr.bottom, text: heading.textContent.trim() },
       fit: getComputedStyle(image).objectFit,
+      dots: dots.map((dot) => ({ width: parseFloat(getComputedStyle(dot, "::after").width), height: parseFloat(getComputedStyle(dot, "::after").height) })),
+      heroCenter: { x: hr.left + hr.width / 2, y: hr.top + hr.height / 2 },
+      copyCenter: { x: cr.left + cr.width / 2, y: cr.top + cr.height / 2 },
+      actions: copy.querySelectorAll("a.btn").length,
     };
   });
 
@@ -41,14 +46,13 @@ for (const [width, height] of [[1440, 900], [1024, 900], [820, 1000], [390, 844]
   state.image.naturalWidth > state.image.naturalHeight ? pass("landscape campaign artwork loaded") : fail("campaign artwork is not landscape");
   const copyVisible = state.heading.top >= state.hero.top && state.heading.bottom <= state.hero.bottom && state.heading.text.length > 10;
   copyVisible ? pass("campaign heading is fully visible") : fail("campaign heading is clipped or empty");
-  if (width <= 820) {
-    const expectedHeight = width <= 760 ? 270 : 300;
-    Math.round(state.image.bottom - state.image.top) === expectedHeight ? pass(`responsive image zone is ${expectedHeight}px`) : fail("responsive image zone changed");
-    const overlap = state.image.bottom - state.copy.top;
-    overlap <= 24.5 ? pass(overlap > 0 ? "mobile copy uses the intentional 24px overlap" : "tablet copy follows the image") : fail("copy obscures too much of the image");
-  } else {
-    state.copy.width < state.hero.width * .55 ? pass("desktop copy leaves the product scene visible") : fail("desktop copy obscures too much artwork");
-  }
+  Math.abs(state.image.top - state.hero.top) < 1 && Math.abs(state.image.bottom - state.hero.bottom) < 1 && Math.abs(state.image.width - state.hero.width) < 1
+    ? pass("campaign photograph fills the whole hero") : fail("campaign photograph does not fill the hero");
+  Math.abs(state.heroCenter.x - state.copyCenter.x) < 2 && Math.abs(state.heroCenter.y - state.copyCenter.y) < 2
+    ? pass("title, button and subline are centred on the image") : fail("hero copy is not centred");
+  state.actions === 1 ? pass("hero contains one focused action") : fail(`${state.actions} hero actions rendered`);
+  state.dots.length === 3 && state.dots.every((dot) => dot.width <= 10 && dot.height <= 10)
+    ? pass("slider uses three small dots") : fail("slider dots are missing or oversized");
   await page.close();
 }
 

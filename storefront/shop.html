@@ -84,6 +84,12 @@
         <div class="wrap">
           <p class="crumb"><a href="index.html">Home</a> &nbsp;/&nbsp; <span id="crumbtitle">Products</span></p>
 
+          <header class="shop-heading">
+            <h1 class="h1" id="listtitle">All products</h1>
+            <p class="lede" id="listintro">Explore the complete Homex collection.</p>
+            <nav class="category-chips" id="category-chips" aria-label="Product categories"></nav>
+          </header>
+
           <div class="shop">
 
             <form class="filters" id="filters" aria-label="Refine the catalog" onsubmit="return false">
@@ -93,7 +99,7 @@
               </div>
 
               <div class="fgroup">
-                <h4 id="fg-collection">Category</h4>
+                <h4 id="fg-collection">Product Type</h4>
                 <div id="catfilters" role="group" aria-labelledby="fg-collection"></div>
               </div>
 
@@ -123,8 +129,18 @@
               </div>
 
               <div class="fgroup">
-                <h4 id="fg-brand">Brand</h4>
+                <h4 id="fg-brand">Design Style</h4>
                 <div id="brandfilters" role="group" aria-labelledby="fg-brand"></div>
+              </div>
+
+              <div class="fgroup">
+                <h4 id="fg-color">Color</h4>
+                <div id="colorfilters" role="group" aria-labelledby="fg-color"></div>
+              </div>
+
+              <div class="fgroup">
+                <h4 id="fg-location">Indoor / Outdoor</h4>
+                <div id="locationfilters" role="group" aria-labelledby="fg-location"><label class="check"><input type="checkbox" value="indoor"> Indoor</label><label class="check"><input type="checkbox" value="outdoor"> Outdoor</label></div>
               </div>
 
               <div class="fgroup" style="border-bottom:0">
@@ -135,8 +151,6 @@
             <div>
               <div class="listhd">
                 <div>
-                  <h1 class="h1" id="listtitle">All products</h1>
-                  <p class="lede" id="listintro" style="margin:8px 0 4px">&nbsp;</p>
                   <p class="cap mb0" id="count" role="status">&nbsp;</p>
                   <script>
                     (() => {
@@ -159,9 +173,10 @@
                 </div>
                 <div class="list-controls">
                   <button class="fbar mobonly" type="button" data-open="filters">Filters</button>
+                  <span class="sort-prefix" aria-hidden="true">Sort by:</span>
                   <label class="sr" for="sort">Sort by</label>
                   <select class="sort" id="sort">
-                    <option value="new">Newest</option>
+                    <option value="new">Featured</option>
                     <option value="low">Price, low to high</option>
                     <option value="high">Price, high to low</option>
                   </select>

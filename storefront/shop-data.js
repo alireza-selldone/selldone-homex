@@ -11,7 +11,7 @@
 import { getPublicConfig } from "../shared/runtime-config.js";
 import { shopConfig, slugify } from "./shop-config.js";
 import { selldoneImagePathToUrl } from "../dashboard/features/selldone-images.js";
-import { HOMEX_JOURNAL } from "./journal-data.js";
+import { HOMEX_JOURNAL, HOMEX_JOURNAL_SOURCE } from "./journal-data.js";
 
 const cfg = getPublicConfig();
 
@@ -167,6 +167,13 @@ function fallbackJournal() {
   return { posts, cats, total: posts.length };
 }
 
+function localJournalCover(slug, activeConfig) {
+  const activeId = Number(activeConfig?.shop?.id || SHOP.id || 0);
+  const activeHandle = String(activeConfig?.shop?.handle || SHOP.handle || "").toLowerCase();
+  if (activeId !== HOMEX_JOURNAL_SOURCE.shopId || activeHandle !== HOMEX_JOURNAL_SOURCE.shopHandle) return "";
+  return HOMEX_JOURNAL.find((post) => post.slug === slug)?.image || "";
+}
+
 /* Categories alone — one request. The article page needs a name for one id and
    should not pull the whole listing to get it. */
 export async function loadBlogCategories() {
@@ -178,6 +185,7 @@ export async function loadBlogCategories() {
 }
 
 export async function loadBlog() {
+  const activeConfig = await shopConfig();
   let listing, extra;
   try {
     [listing, extra] = await Promise.all([
@@ -208,7 +216,7 @@ export async function loadBlog() {
     blogId: a.parent_id,          // the detail route wants this, not a.id
     slug: a.slug,
     title: a.title,
-    image: a.image,
+    image: localJournalCover(a.slug, activeConfig) || a.image,
     excerpt: excerpt(a.description),
     date: articleDate(a),
     category: owners.get(a.id) || null,
@@ -219,6 +227,7 @@ export async function loadBlog() {
 }
 
 export async function loadArticle({ blogId, slug }) {
+  const activeConfig = await shopConfig();
   const local = HOMEX_JOURNAL.find((p) => (blogId && p.blogId === Number(blogId)) || (slug && p.slug === slug));
   let id = blogId;
   if (!id && slug) {
@@ -233,7 +242,7 @@ export async function loadArticle({ blogId, slug }) {
   const a = r.article;
   return {
     id: a.id, blogId: id, slug: a.slug, title: a.title, body: a.body,
-    image: a.image, excerpt: excerpt(a.description, 240),
+    image: localJournalCover(a.slug, activeConfig) || a.image, excerpt: excerpt(a.description, 240),
     date: articleDate(a), categoryId: r.category ?? null,
     author: a.user?.name || "",
   };

@@ -2,6 +2,20 @@
 
 An original, responsive furniture storefront for the Selldone shop **Homex** (shop `15574`). The interface uses live Selldone catalog, product, variant, blog, account, bag, and checkout data while keeping the presentation layer in this repository.
 
+## Preview
+
+<p align="center">
+  <img src="docs/screenshots/home-desktop.jpg" alt="Homex homepage on desktop" width="100%">
+</p>
+
+| Product catalog | Furniture journal |
+| --- | --- |
+| ![Homex product catalog](docs/screenshots/shop-desktop.jpg) | ![Homex furniture journal](docs/screenshots/journal-desktop.jpg) |
+
+<p align="center">
+  <img src="docs/screenshots/home-mobile.jpg" alt="Homex homepage on mobile" width="360">
+</p>
+
 ## Catalog status
 
 - 100 physical products across 15 furniture and home categories
@@ -13,9 +27,9 @@ An original, responsive furniture storefront for the Selldone shop **Homex** (sh
 
 ## Design
 
-The storefront is an original Homex design. Memoky supplied the main information-hierarchy reference: a utility strip, search-led header, room navigation, editorial hero, category-led discovery, product-heavy merchandising, and a practical product-detail page. Article and West Elm were also reviewed for current room taxonomy, filtering, service reassurance, and product-density patterns. No third-party logo, copy, photograph, or source code is included.
+The storefront is an original Homex design built as a cohesive combination of editorial storytelling, room-led discovery, product-focused merchandising, and practical shopping interactions. The visual system, page composition, responsive behavior, and commerce experience were created specifically for this project. No third-party logo, copy, photograph, or source code is included.
 
-The three editorial campaign images in `storefront/assets/homex/` were generated specifically for Homex and compressed as WebP. Every file is below 500 KB.
+The editorial campaign and journal-cover images were generated specifically for Homex and optimized for the storefront. Every file is below 500 KB.
 
 Live Selldone XAPI is the primary catalog source. [`catalog-snapshot.js`](storefront/catalog-snapshot.js) is a versioned resilience fallback from the same shop and is used only when XAPI is unavailable or returns an application error.
 

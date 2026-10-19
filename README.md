@@ -68,6 +68,20 @@ Contact, address, company-registration, and opening-hours fields are intentional
 
 ## Deployment
 
+The footer newsletter uses the official SendFox embed configured by the public
+`newsletter` settings in `shop.config.json`. The Homex form is attached to the
+dedicated **Homex Newsletter (Test Store)** list, requires email and consent, and
+keeps SendFox's reCAPTCHA protection. If the embed cannot load, a link opens its
+hosted signup page. No SendFox API token is stored in this repository or build.
+
+This connects newsletter capture only. Transactional email for Selldone order
+receipts and login codes is still pending: a SendFox access request has been
+submitted for `alireza@selldone.com`, and Selldone has no native SendFox provider
+or generic HTTP mail transport. The account also has no verified sender domain
+or mailing address yet. No campaign or successful signup/delivery test has been
+sent. Build, identity-leak checks, the live embed destination, required consent,
+and invalid-email validation have been verified.
+
 The static build is written to `dist/`. [`wrangler.jsonc`](wrangler.jsonc) configures the `selldone-homex` Worker, its `workers.dev` address, and the custom domain [`homex.selldone.shop`](https://homex.selldone.shop/). GitHub pushes to `main` trigger Cloudflare Workers Builds. Browser login uses a shop-bound public Authorization Code + PKCE client; there is no client secret in the repository or browser bundle.
 
 ## Safety note

@@ -58,6 +58,7 @@ We share only what is necessary, and only with:
 - **Payment providers**, to take payment
 - **Shipping carriers**, to deliver your order
 - **Email and hosting providers**, to run the site and send order notifications
+- **SendFox**, to collect newsletter subscriptions and send the marketing emails you request, including subscription confirmation and unsubscribe handling
 - **Accountants and tax authorities**, where the law requires it
 
 Each of these is bound to use the data only for that purpose.

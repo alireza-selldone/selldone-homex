@@ -7,6 +7,11 @@
     "domain": "homex.myselldone.com"
   },
   "isTemplate": false,
+  "newsletter": {
+    "provider": "sendfox",
+    "formSlug": "mpr8kv",
+    "hostedUrl": "https://sendfox.com/form/3e6zwl/mpr8kv"
+  },
   "oauth": {
     "clientId": "01a01c32-b469-70c1-83ad-89ec03619a34",
     "appName": "Homex Storefront"

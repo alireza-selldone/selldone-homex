@@ -466,7 +466,29 @@ export function closeLightbox() {
    storefront this is a write, so it is the one control that needs in-flight
    state and a spoken result — a form that silently does nothing is worse than
    one that is visibly absent. */
-function initNewsletter() {
+async function initNewsletter() {
+  const newsletter = (await shopConfig()).newsletter;
+  if (newsletter?.provider === "sendfox" && /^[a-z0-9]+$/i.test(newsletter.formSlug || "")) {
+    const hostedUrl = new URL(newsletter.hostedUrl);
+    if (hostedUrl.origin !== "https://sendfox.com" || !hostedUrl.pathname.startsWith("/form/")) return;
+    document.querySelectorAll(".sub").forEach((box) => {
+      box.classList.add("sub--sendfox");
+      box.replaceChildren();
+      const fallback = document.createElement("p");
+      fallback.className = "newsletter-fallback";
+      const link = document.createElement("a");
+      link.href = hostedUrl.href;
+      link.textContent = "Open the Homex newsletter signup form";
+      fallback.append(link);
+      const script = document.createElement("script");
+      script.src = "https://cdn.sendfox.com/js/embed.js";
+      script.dataset.form = newsletter.formSlug;
+      script.dataset.api = "https://sendfox.com";
+      script.async = true;
+      box.append(script, fallback);
+    });
+    return;
+  }
   document.querySelectorAll(".sub").forEach((box) => {
     const input = box.querySelector("input[type=email]");
     const btn = box.querySelector("button");

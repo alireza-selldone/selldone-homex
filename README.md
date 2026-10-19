@@ -74,11 +74,12 @@ dedicated **Homex Newsletter (Test Store)** list, requires email and consent, an
 keeps SendFox's reCAPTCHA protection. If the embed cannot load, a link opens its
 hosted signup page. No SendFox API token is stored in this repository or build.
 
-This connects newsletter capture only. Transactional email for Selldone order
-receipts and login codes is still pending: a SendFox access request has been
-submitted for `alireza@selldone.com`, and Selldone has no native SendFox provider
-or generic HTTP mail transport. The account also has no verified sender domain
-or mailing address yet. No campaign or successful signup/delivery test has been
+This connects newsletter capture only. SendFox transactional access is enabled
+for `alireza@selldone.com`, and one test from its onboarding sender to that
+account address has a verified **Delivered** status. Selldone order receipts and
+login codes are still unconfigured: Selldone has no native SendFox provider or
+generic HTTP mail transport. The account also has no verified sender domain or
+mailing address yet. No campaign or successful newsletter signup test has been
 sent. Build, identity-leak checks, the live embed destination, required consent,
 and invalid-email validation have been verified.
 
